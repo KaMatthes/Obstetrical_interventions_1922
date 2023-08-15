@@ -1,6 +1,6 @@
 data_laus <- read.xlsx("data/laus_cleaned_2023-01-23.xlsx",detectDates = TRUE) %>%
   mutate(City="Lausanne") %>%
-  select(-agemother_cat,-menarche_cat,-parity_cat,-LBW, -GA_days) %>%
+  select(-agemother_cat,-menarche_cat,-parity_cat,-LBW, -GA_days, -GA_weeks_cat,-age_baby_cat) %>%
   mutate( Bassin_Epines = as.numeric( Bassin_Epines),
           Bassin_Cretes = as.numeric(Bassin_Cretes),
           Bassin_Trochanters = as.numeric(Bassin_Trochanters),
@@ -72,7 +72,14 @@ data_com <- data_laus %>%
   mutate(Bassin_Epines = ifelse(Bassin_Epines==0, NA, Bassin_Epines),
          Bassin_Cretes = ifelse(Bassin_Cretes==0, NA, Bassin_Cretes),
          Bassin_Trochanters = ifelse(Bassin_Trochanters==0, NA, Bassin_Trochanters),
-         Bassin_ConjExt = ifelse(Bassin_ConjExt==0, NA, Bassin_ConjExt))
+         Bassin_ConjExt = ifelse(Bassin_ConjExt==0, NA, Bassin_ConjExt),
+         stillbirth = recode(stillbirth,
+                             "no" = "1",
+                             "yes" = "0"),
+         GA_weeks = ifelse(is.na(GA_weeks), age_baby_final, GA_weeks),
+         GA_weeks = ifelse(GA_weeks=="a terme", 40, GA_weeks),
+         GA_weeks = as.numeric(GA_weeks),
+         GA_weeks_cat=cut(as.numeric(GA_weeks), breaks=c(10, 33, 37, 41, 52), include.lowest = TRUE,  right = FALSE))
          # Bassin_ConjExt = ifelse(Bassin_ConjExt>50, NA, Bassin_ConjExt))
          # 
 

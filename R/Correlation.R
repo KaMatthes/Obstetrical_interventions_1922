@@ -18,6 +18,7 @@ plot_height_Epines <- ggplot(data=data_com) +
     legend.text = element_text(size=15),
     legend.title = element_text(size=15),
     legend.position = c(0.2,0.9))
+plot_height_Epines
 
 cor(data_l$height,data_l$Bassin_Epines, use = "complete")
 cor(data_b$height,data_b$Bassin_Epines, use = "complete")
@@ -50,10 +51,9 @@ cor(data_b$height,data_b$Bassin_Cretes, use = "complete")
 summary(lm(Bassin_Cretes ~ height + City, data=data_com))
 
 
-plot_height_ConjExt <- ggplot(data=data_com) +
+plot_height_ConjExt <- ggplot(data=subset(data_com, Bassin_ConjExt<150))+
   geom_point(aes(x=height, y=Bassin_ConjExt, col=City)) +
   geom_smooth(aes(x=height, y=Bassin_ConjExt, col=City),method = lm) +
-  
   theme_bw()+
   theme(
     axis.text=element_text(color="black",size= 15),
@@ -62,13 +62,14 @@ plot_height_ConjExt <- ggplot(data=data_com) +
     legend.text = element_text(size=15),
     legend.title = element_text(size=15),
     legend.position = c(0.2,0.9))
+plot_height_ConjExt
 
 cor(data_l$height,data_l$Bassin_ConjExt, use = "complete")
 cor(data_b$height,data_b$Bassin_ConjExt, use = "complete")
 summary(lm(Bassin_ConjExt ~ height + City, data=data_com))
 
 plot_height_ConjExt <- ggplot(data=data_com) +
-  geom_point(aes(x=height, y=head_circ, col=City)) +
+    geom_point(aes(x=height, y=head_circ, col=City)) +
   geom_smooth(aes(x=height, y=head_circ, col=City),method = lm) +
   
   theme_bw()+
