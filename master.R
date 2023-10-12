@@ -1,14 +1,16 @@
 .libPaths(c("H:/Documents/R/win-library/4.1", "C:/Program Files/R/R-4.2.2/library"))
 
 library(MASS)
+library(lme4)
 library(tidyverse)
 library(openxlsx)
 library(lubridate)
 library(ggsci)
 library(conflicted)
-# library(nlme)
-#library(lme4)
-#library(lmerTest)
+library(nlme)
+library(lme4)
+library(lmerTest)
+library(ggplot2)
 conflict_prefer("select", "dplyr")
 conflict_prefer("mutate", "dplyr")
 conflict_prefer("recode", "dplyr")
@@ -19,7 +21,8 @@ conflict_prefer("summarise", "dplyr")
 conflict_prefer("arrange", "dplyr")
 conflict_prefer("rbind.fill", "plyr")
 conflict_prefer("group_by", "dplyr")
-
+conflict_prefer("lme4", "lmerTest")
+conflicts_prefer(lmerTest::lmer)
 
 
 ### Research questions from the paper:
