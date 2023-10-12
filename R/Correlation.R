@@ -44,11 +44,16 @@ plot_height_Cretes <- ggplot(data=data_com) +
     legend.text = element_text(size=15),
     legend.title = element_text(size=15),
     legend.position = c(0.2,0.9))
-
+plot_height_Cretes
 
 cor(data_l$height,data_l$Bassin_Cretes, use = "complete")
 cor(data_b$height,data_b$Bassin_Cretes, use = "complete")
 summary(lm(Bassin_Cretes ~ height + City, data=data_com))
+
+
+model2 <- lmer(Bassin_Cretes ~ height + (1|City),data=data_com,REML=TRUE)
+summary(model2)
+ranova(model2)
 
 
 plot_height_ConjExt <- ggplot(data=subset(data_com, Bassin_ConjExt<150))+
@@ -69,9 +74,8 @@ cor(data_b$height,data_b$Bassin_ConjExt, use = "complete")
 summary(lm(Bassin_ConjExt ~ height + City, data=data_com))
 
 plot_height_ConjExt <- ggplot(data=data_com) +
-    geom_point(aes(x=height, y=head_circ, col=City)) +
-  geom_smooth(aes(x=height, y=head_circ, col=City),method = lm) +
-  
+    geom_point(aes(x=Bassin_ConjExt, y=head_circ, col=City)) +
+  geom_smooth(aes(x=Bassin_ConjExt, y=head_circ, col=City),method = lm) +
   theme_bw()+
   theme(
     axis.text=element_text(color="black",size= 15),
@@ -80,7 +84,7 @@ plot_height_ConjExt <- ggplot(data=data_com) +
     legend.text = element_text(size=15),
     legend.title = element_text(size=15),
     legend.position = c(0.2,0.9))
-
+plot_height_ConjExt
 
 
 plot_height_ConjExt <- ggplot(data=data_com) +

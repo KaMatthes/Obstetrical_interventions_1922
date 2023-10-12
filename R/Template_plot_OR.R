@@ -9,10 +9,10 @@ data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
                     "0" = "male",
                     "1" ="female" ),
          Position_normal = recode(Position_normal,"0"="normal",
-                                  "1" = "non-normal"))
-
-data_com$birthweight100 <- data_com$birthweight/100
-data_com$height10 <- data_com$height/10
+                                  "1" = "non-normal"),
+         birthweight100 = birthweight/100,
+         height10 = height/10,
+         height_cretes = height/Bassin_Cretes )
 
 data_laus <- data_com %>%
   filter(City=="Lausanne") 
@@ -49,8 +49,7 @@ Mod_laus_ep_uni <- data.frame(summary(glm(Episiotomy ~  Position_normal,
          outcome="Episiotomy")
 
 Mod_laus_ep <- data.frame(summary(glm(Episiotomy ~  sex + parity + Position_normal + age_mother + head_circ + 
-                                        birthweight100 + height10 + GA_weeks +
-                                        Bassin_Epines +Bassin_Cretes +Bassin_ConjExt, 
+                                        birthweight100 + height10 + GA_weeks + height_cretes + Bassin_ConjExt,
                                         data = data_laus, family="binomial"))$coefficients) %>%
   mutate(Est = round(exp(Estimate),2),
          CIl = round(exp(Estimate - 1.96*`Std..Error`),2),
