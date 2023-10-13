@@ -5,14 +5,19 @@ data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
          Position_normal= as.factor(Position_normal),
          Episiotomy = as.factor(Episiotomy),
          sex= as.factor(sex),
-         sex=recode(sex, 
-                    "0" = "male",
-                    "1" ="female" ),
+         # sex=recode(sex, 
+         #            "0" = "male",
+         #            "1" ="female" ),
          Position_normal = recode(Position_normal,"0"="normal",
                                   "1" = "non-normal"),
          birthweight100 = birthweight/100,
          height10 = height/10,
-         height_cretes = height/Bassin_Cretes )
+         Bassin_Cretes10= Bassin_Cretes/10,
+         height_cretes = height10/Bassin_Cretes10,
+         sex = factor( sex, levels = c("male", "female"))) %>%
+  group_by(City) %>%
+  mutate(Duree_2me_periode_z = (Duree_2me_periode-mean(Duree_2me_periode,na.rm = TRUE))/sd(Duree_2me_periode,na.rm = TRUE)) %>%
+  ungroup()
 
 data_laus <- data_com %>%
   filter(City=="Lausanne") 
@@ -20,6 +25,7 @@ data_laus <- data_com %>%
 
 data_basel <- data_com %>%
   filter(City=="Basel") 
+
 
 ### Episiotomy, 1= ja, 0 = nein
 
@@ -49,7 +55,7 @@ Mod_laus_ep_uni <- data.frame(summary(glm(Episiotomy ~  Position_normal,
          outcome="Episiotomy")
 
 Mod_laus_ep <- data.frame(summary(glm(Episiotomy ~  sex + parity + Position_normal + age_mother + head_circ + 
-                                        birthweight100 + height10 + GA_weeks + height_cretes + Bassin_ConjExt,
+                                        birthweight100 + height10 + GA_weeks + height_cretes + Bassin_Epines+ Bassin_ConjExt,
                                         data = data_laus, family="binomial"))$coefficients) %>%
   mutate(Est = round(exp(Estimate),2),
          CIl = round(exp(Estimate - 1.96*`Std..Error`),2),
@@ -93,8 +99,7 @@ Mod_basel_ep_uni <- data.frame(summary(glm(Episiotomy ~  Position_normal,
          outcome="Episiotomy")
 
 Mod_basel_ep <- data.frame(summary(glm(Episiotomy ~  sex + parity + Position_normal + age_mother + head_circ + 
-                                        birthweight100 + height10 + GA_weeks +
-                                        Bassin_Epines +Bassin_Cretes +Bassin_ConjExt, 
+                                         birthweight100 + height10 + GA_weeks + height_cretes + Bassin_Epines+ Bassin_ConjExt,
                                       data = data_basel, family="binomial"))$coefficients) %>%
   mutate(Est = round(exp(Estimate),2),
          CIl = round(exp(Estimate - 1.96*`Std..Error`),2),
@@ -140,9 +145,8 @@ Mod_laus_me_uni <- data.frame(summary(glm(Mecanisme_normal ~   Position_normal,
   mutate(City="Lausanne",
          outcome="Mecanisme")
 
-Mod_laus_me <- data.frame(summary(glm(Mecanisme_normal ~  sex + parity + Position_normal + 
-                                        age_mother + head_circ + birthweight100 + height10 + 
-                                        GA_weeks  + Bassin_Cretes, 
+Mod_laus_me <- data.frame(summary(glm(Mecanisme_normal ~  sex + parity + Position_normal + age_mother + head_circ + 
+                                        birthweight100 + height10 + GA_weeks + height_cretes + Bassin_Epines+ Bassin_ConjExt,
                                         data = data_laus, family="binomial"))$coefficients) %>%
   mutate(Est = round(exp(Estimate),2),
          CIl = round(exp(Estimate - 1.96*`Std..Error`),2),
@@ -184,9 +188,8 @@ Mod_basel_me_un <- data.frame(summary(glm(Mecanisme_normal ~  Position_normal,
 
 
 
-Mod_basel_me <- data.frame(summary(glm(Mecanisme_normal ~  sex + parity + Position_normal + 
-                                         age_mother + head_circ + birthweight100 + height10 + 
-                                         GA_weeks  + Bassin_Cretes, 
+Mod_basel_me <- data.frame(summary(glm(Mecanisme_normal ~  sex + parity + Position_normal + age_mother + head_circ + 
+                                         birthweight100 + height10 + GA_weeks + height_cretes + Bassin_Epines+ Bassin_ConjExt,
                                        data = data_basel, family="binomial"))$coefficients) %>%
   mutate(Est = round(exp(Estimate),2),
          CIl = round(exp(Estimate - 1.96*`Std..Error`),2),
@@ -199,29 +202,123 @@ Mod_basel_me <- data.frame(summary(glm(Mecanisme_normal ~  sex + parity + Positi
          outcome="Mecanisme")
 
 
+# Dauer der Ausbreitung
+
+# Lausanne
+
+
+Mod_laus_du_uni <- data.frame(summary(lm(Duree_2me_periode_z ~   Position_normal, 
+                                          data = data_laus))$coefficients) %>%
+  mutate(Est = round(Estimate,2),
+         CIl = round(Estimate - 1.96*`Std..Error`,2),
+         CIu = round(Estimate + 1.96*`Std..Error`,2),
+         Fac = row.names(.)) %>%
+  filter(!Fac =="(Intercept)") %>%
+  #filter(!Fac =="birthweight") %>%
+  select(Fac, Est, CIl,CIu) %>%
+  mutate(City="Lausanne",
+         outcome="Duration")
+
+Mod_laus_du <- data.frame(summary(lm(Duree_2me_periode_z ~  sex + parity + Position_normal + age_mother + head_circ + 
+                                        birthweight100 + height10 + GA_weeks + height_cretes + Bassin_Epines+ Bassin_ConjExt,
+                                      data = data_laus))$coefficients) %>%
+  mutate(Est = round(Estimate,2),
+         CIl = round(Estimate - 1.96*`Std..Error`,2),
+         CIu = round(Estimate + 1.96*`Std..Error`,2),
+         Fac = row.names(.)) %>%
+  filter(!Fac =="(Intercept)") %>%
+  #filter(!Fac =="birthweight") %>%
+  select(Fac, Est, CIl,CIu) %>%
+  mutate(City="Lausanne",
+         outcome="Duration")
+
+
+# Basel
+Mod_basel_du_un <- data.frame(summary(lm(Duree_2me_periode_z ~   Position_normal, 
+                                        data = data_basel))$coefficients) %>%
+  mutate(Est = round(Estimate,2),
+         CIl = round(Estimate - 1.96*`Std..Error`,2),
+         CIu = round(Estimate + 1.96*`Std..Error`,2),
+         Fac = row.names(.)) %>%
+  filter(!Fac =="(Intercept)") %>%
+  #filter(!Fac =="birthweight") %>%
+  select(Fac, Est, CIl,CIu) %>%
+  mutate(City="Basel",
+         outcome="Duration")
+
+
+
+Mod_basel_du <- data.frame(summary(lm(Duree_2me_periode_z ~  sex + parity + Position_normal + age_mother + head_circ + 
+                                        birthweight100 + height10 + GA_weeks + height_cretes + Bassin_Epines+ Bassin_ConjExt,
+                                      data = data_basel))$coefficients) %>%
+  mutate(Est = round(Estimate,2),
+         CIl = round(Estimate - 1.96*`Std..Error`,2),
+         CIu = round(Estimate + 1.96*`Std..Error`,2),
+         Fac = row.names(.)) %>%
+  filter(!Fac =="(Intercept)") %>%
+  #filter(!Fac =="birthweight") %>%
+  select(Fac, Est, CIl,CIu) %>%
+  mutate(City="Basel",
+         outcome="Duration")
+
+
 # Plot
 
 data_plot <- rbind(Mod_laus_ep,Mod_basel_ep,
-                   Mod_laus_me,Mod_basel_me) %>%
+                   Mod_laus_me,Mod_basel_me,
+                   Mod_laus_du,Mod_basel_du) %>%
   mutate(Fac=recode(Fac,
-                    "sex" = "Sex of the child",
+                    "Position_normalnon-normal" = "Position non-normal [Ref:normal]",
+                    "sexfemale" = "Sex female [Ref: male]",
+                    "parity" ="Parity",
+                    "age_mother" ="Age of the mother",
+                    "GA_weeks" = "Gestational age (w)",
                     "Bassin_ConjExt" = "Bassin ConjExt",
-                    "Bassin_Cretes" = "Bassin Cretes",
                     "Bassin_Epines" = "Bassin Epines",
+                    "height_cretes" = "Ratio height/Bassin Cretes",
+                    # "Bassin_Cretes" = "Bassin Cretes",
                     "birthweight100" = "Birthweight in 100gr",
                     "height10" = "Maternal height in 10cm",
-                    "GA_weeks" = "Gestational age (w)",
-                    "head_circ" = "Head circumference"))
+                    "head_circ" = "Head circumference in cm"),
+         outcome = factor(outcome, levels = c("Episiotomy", "Mecanisme", "Duration")))
 
 
-OR_plot <- ggplot( data_plot , aes(x=forcats::fct_rev(Fac),y=Est),position=pd) + 
+
+OR_plot <- ggplot( data_plot[!data_plot$Fac=="Position non-normal [Ref:normal]" & !data_plot$outcome=="Duration"  ,] , aes(x=forcats::fct_rev(Fac),y=Est),position=pd) + 
   geom_hline(yintercept=1, colour="grey", lwd=lwdline) + 
-  geom_pointrange(aes(ymin=CIl, ymax=CIu,col=City),lwd=lwd_size,position=pd,fatten=fatten_size)+
+  geom_pointrange(aes(ymin=CIl, ymax=CIu,col=City),lwd=1.5,position=pd,fatten=6)+
+  facet_wrap(~outcome, ncol=2)+
+  # ylim(c(0,2.5))+
+  labs(x="",y="OR") +
+  # guides(color = guide_legend(override.aes = list(size = 1.5)))+
+  ggtitle("")+
+  scale_color_manual(" ",
+                     breaks=c("Lausanne","Basel"),
+                     # labels=c("Age >=40 (Ref)","Age <40"),
+                     values = c(mypalette[3],mypalette[2]))+
+  theme_bw()+
+  theme(aspect.ratio=1,
+        strip.text = element_text(color="black",size= strip_text),
+        axis.text=element_text(color="black",size= size_axis),
+        axis.title=element_text(size= size_axis_title),
+        plot.title = element_text(size=size_plot_title),
+        legend.text=element_text(size=size_legend_text),
+        legend.title= element_blank(),
+        legend.position = "bottom") +
+  coord_flip(ylim=c(0, 2)) 
+
+cowplot::save_plot("output/OR_plot.pdf", OR_plot,base_height=8,base_width=15)  
+
+
+
+OR_plot_position <- ggplot( data_plot[data_plot$Fac=="Position non-normal [Ref:normal]"& !data_plot$outcome=="Duration"  ,] , aes(x=forcats::fct_rev(Fac),y=Est),position=pd) + 
+  geom_hline(yintercept=1, colour="grey", lwd=lwdline) + 
+  geom_pointrange(aes(ymin=CIl, ymax=CIu,col=City),lwd=1.5,position=pd,fatten=6)+
   facet_grid(~outcome)+
   # ylim(c(0,2.5))+
   labs(x="",y="OR") +
   # guides(color = guide_legend(override.aes = list(size = 1.5)))+
-  ggtitle("Each city separately")+
+  ggtitle("")+
   scale_color_manual(" ",
                      breaks=c("Lausanne","Basel"),
                      # labels=c("Age >=40 (Ref)","Age <40"),
@@ -237,7 +334,35 @@ OR_plot <- ggplot( data_plot , aes(x=forcats::fct_rev(Fac),y=Est),position=pd) +
         legend.position = "bottom") +
   coord_flip() 
 
-cowplot::save_plot("output/OR_plot2.pdf", OR_plot,base_height=8,base_width=20)  
+cowplot::save_plot("output/OR_plot_position.pdf", OR_plot_position ,base_height=8,base_width=15)  
+
+
+
+OR_plot_duration <- ggplot( data_plot[data_plot$outcome=="Duration"  ,] , aes(x=forcats::fct_rev(Fac),y=Est),position=pd) + 
+  geom_hline(yintercept=0, colour="grey", lwd=lwdline) + 
+  geom_pointrange(aes(ymin=CIl, ymax=CIu,col=City),lwd=1.5,position=pd,fatten=6)+
+  facet_wrap(~outcome, ncol=2)+
+  # ylim(c(0,2.5))+
+  labs(x="",y="OR") +
+  # guides(color = guide_legend(override.aes = list(size = 1.5)))+
+  ggtitle("")+
+  scale_color_manual(" ",
+                     breaks=c("Lausanne","Basel"),
+                     # labels=c("Age >=40 (Ref)","Age <40"),
+                     values = c(mypalette[3],mypalette[2]))+
+  theme_bw()+
+  theme(aspect.ratio=1,
+        strip.text = element_text(color="black",size= strip_text),
+        axis.text=element_text(color="black",size= size_axis),
+        axis.title=element_text(size= size_axis_title),
+        plot.title = element_text(size=size_plot_title),
+        legend.text=element_text(size=size_legend_text),
+        legend.title= element_blank(),
+        legend.position = "bottom") +
+  coord_flip(ylim=c(-1, 1)) 
+
+
+cowplot::save_plot("output/OR_plot_duration.pdf", OR_plot_duration ,base_height=8,base_width=15)  
 
 ###  Next steps: 
 # Coeff Plot anpassen auch für kategorische Variablen
@@ -246,5 +371,5 @@ cowplot::save_plot("output/OR_plot2.pdf", OR_plot,base_height=8,base_width=20)
 # Dauer Austreibungsphase als Outcome. Outcomes sind: Episiotomie, Intervention generell, Dauer Austreibung (z-transformation?), Stillbirth?
 # Konstruieren Ratio Grösse zu Becken Mutter; Ratio Kopf Kind zu Conj Ext Mutter; Ratio Grösse Mutter vs. Grösse Kind?
 # Interventionen nur modelieren für normale Kindspositionen?
-# Ratio Height vs. Bassin_Cretes; Ratio head_circ vs Bassin_ConjExt; Height vs. Birthweight
+# Ratio Height vs. Bassin_Cretes (cor 0.39); Ratio head_circ vs Bassin_ConjExt (cor 0.09); Height vs. Birthweight (cor 0.15)
 # Frage zusätzlich zu Vergleichmodelle, für Basel der Sozialstatus, in Lausanne noch Gesundheitszustand der Frau als Einzelmodelle
