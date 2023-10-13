@@ -12,7 +12,7 @@ cor(data_b$height,data_b$Bassin_Cretes, use = "complete")
 
 
 data_com_reduced <-  data_com%>%
-  select('Bassin_Cretes', 'Bassin_Epines', 'height', 'Bassin_ConjExt', 'head_circ')
+  select('Bassin_Cretes', 'Bassin_Epines', 'height', 'Bassin_ConjExt', 'head_circ','birthweight')
 
 
 cor_mat <- round(cor(data_com_reduced, use="pairwise.complete.obs"), 2)

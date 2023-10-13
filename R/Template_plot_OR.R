@@ -307,9 +307,7 @@ OR_plot <- ggplot( data_plot[!data_plot$Fac=="Position non-normal [Ref:normal]" 
         legend.position = "bottom") +
   coord_flip(ylim=c(0, 2)) 
 
-cowplot::save_plot("output/OR_plot.pdf", OR_plot,base_height=8,base_width=15)  
-
-
+# cowplot::save_plot("output/OR_plot.pdf", OR_plot,base_height=8,base_width=15)  
 
 OR_plot_position <- ggplot( data_plot[data_plot$Fac=="Position non-normal [Ref:normal]"& !data_plot$outcome=="Duration"  ,] , aes(x=forcats::fct_rev(Fac),y=Est),position=pd) + 
   geom_hline(yintercept=1, colour="grey", lwd=lwdline) + 
@@ -332,11 +330,13 @@ OR_plot_position <- ggplot( data_plot[data_plot$Fac=="Position non-normal [Ref:n
         legend.text=element_text(size=size_legend_text),
         legend.title= element_blank(),
         legend.position = "bottom") +
-  coord_flip() 
+  coord_flip(ylim=c(0, 30)) 
 
-cowplot::save_plot("output/OR_plot_position.pdf", OR_plot_position ,base_height=8,base_width=15)  
+# cowplot::save_plot("output/OR_plot_position.pdf", OR_plot_position ,base_height=8,base_width=15)  
 
+OR_both <- cowplot::plot_grid( OR_plot,OR_plot_position,ncol=1,align="h")
 
+cowplot::save_plot("output/OR_plot.pdf",OR_both ,base_height=15,base_width=15)  
 
 OR_plot_duration <- ggplot( data_plot[data_plot$outcome=="Duration"  ,] , aes(x=forcats::fct_rev(Fac),y=Est),position=pd) + 
   geom_hline(yintercept=0, colour="grey", lwd=lwdline) + 

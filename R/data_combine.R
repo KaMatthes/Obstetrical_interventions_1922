@@ -22,7 +22,9 @@ data_laus <- read.xlsx("data/laus_cleaned_2023-01-23.xlsx",detectDates = TRUE) %
          Episiotomy  = as.factor(Episiotomy ),
          Ceasarean = as.factor(Ceasarean),
          Forceps = as.factor(Forceps),
-         Extraction = as.factor( Extraction))
+         Extraction = as.factor( Extraction),
+         sex=recode(sex, "0"="male",
+                    "1" ="female"))
   
 
 data_basel <- read.xlsx("data/Daten_Basel.xlsx",detectDates = TRUE) %>%
@@ -67,8 +69,6 @@ data_basel <- read.xlsx("data/Daten_Basel.xlsx",detectDates = TRUE) %>%
 
 data_com <- data_laus %>%
   bind_rows(data_basel) %>%
-  mutate(sex=ifelse(sex=="male", 1, sex),
-         sex = ifelse(sex=="female", 0, sex)) %>%
   mutate(Bassin_Epines = ifelse(Bassin_Epines==0, NA, Bassin_Epines),
          Bassin_Cretes = ifelse(Bassin_Cretes==0, NA, Bassin_Cretes),
          Bassin_Trochanters = ifelse(Bassin_Trochanters==0, NA, Bassin_Trochanters),
