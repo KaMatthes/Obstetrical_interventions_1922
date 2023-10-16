@@ -41,7 +41,7 @@ pch_type <- 19
 lwdline <- 1
 size_legend <- 15
 size_legend_title<- 25
-pd <-position_dodge(width=0.4)
+pd <-position_dodge(width=0.5)
 fatten_size <- 4
 plot_title <- 25
 

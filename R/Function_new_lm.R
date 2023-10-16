@@ -1,7 +1,7 @@
 or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL, 
           factorlist = NULL, glmfit = NULL, glmfit2=NULL,confint_type = NULL, remove_ref = FALSE, 
           breaks = NULL, column_space = c(-0.05, 0, 0.05,0.1), dependent_label = NULL, 
-          prefix = "", suffix = ": OR (95% CI)", 
+          prefix = "", suffix = ": Coeff (95% CI)", 
           table_text_size = 4, title_text_size = 20, plot_opts = NULL, 
           table_opts = NULL, ...) 
 {
@@ -36,7 +36,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
   if (is.null(glmfit) && is.null(random_effect)) {
     glmfit = glmmulti(.data, dependent, explanatory)
     glmfit_df_c = fit2df(glmfit, condense = TRUE, estimate_suffix = " (multivariable)", 
-                         confint_type = confint_type, ...)
+                         confint_type = confint_type, metrics=TRUE,...)
     glmfit_df_c2 = fit2df(glmfit2, condense = TRUE, estimate_suffix = " (multivariable)", 
                          confint_type = confint_type, ...)
   }
@@ -48,22 +48,22 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
   if (!is.null(glmfit) && is.null(random_effect)) {
     glmfit_df_c = fit2df(glmfit, condense = TRUE, estimate_suffix = " (multivariable)", 
                          confint_type = confint_type, estimate_name = "OR", 
-                         exp = TRUE, ...)
+                         exp = FALSE, ...)
     glmfit_df_c2 = fit2df(glmfit2, condense = TRUE, estimate_suffix = " (multivariable)", 
                          confint_type = confint_type, estimate_name = "OR", 
-                         exp = TRUE, ...)
+                         exp = FALSE, ...)
   }
   else if (!is.null(glmfit) && !is.null(random_effect)) {
     glmfit_df_c = fit2df(glmfit, condense = TRUE, estimate_suffix = " (multilevel)", 
                          confint_type = confint_type, estimate_name = "OR", 
-                         exp = TRUE, ...)
+                         exp = FALSE, ...)
   }
   glmfit_df = fit2df(glmfit, condense = FALSE, confint_type = confint_type, 
-                     estimate_name = "OR", exp = TRUE, ...)
+                     estimate_name = "OR", exp = FALSE, ...)
   glmfit_df2 = fit2df(glmfit2, condense = FALSE, confint_type = confint_type, 
-                     estimate_name = "OR", exp = TRUE, ...)
+                     estimate_name = "OR", exp = FALSE, ...)
   df.out = finalfit_merge(factorlist, glmfit_df_c)
-  df.out = finalfit_merge(df.out, glmfit_df, ref_symbol = "1.0")
+  df.out = finalfit_merge(df.out, glmfit_df, ref_symbol = "0.0")
   df.out$Total = stringr::str_remove(df.out$Total, " \\(.*\\)") %>% 
     as.numeric()
   df.out$Total[which(df.out$levels %in% c("Mean (SD)", 
@@ -73,7 +73,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
   
   
   df.out2 = finalfit_merge(factorlist, glmfit_df_c2)
-  df.out2 = finalfit_merge(df.out2, glmfit_df2, ref_symbol = "1.0")
+  df.out2 = finalfit_merge(df.out2, glmfit_df2, ref_symbol = "0.0")
   df.out2$Total = stringr::str_remove(df.out2$Total, " \\(.*\\)") %>% 
     as.numeric()
   df.out2$Total[which(df.out2$levels %in% c("Mean (SD)", 
@@ -101,9 +101,11 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
   df.out$levels = as.character(df.out$levels)
   df.out$fit_id = factor(df.out$fit_id, levels = df.out$fit_id[order(-df.out$index)])
   df.out$City = "Lausanne"
-  df.out$OR_plot=paste0(substr(df.out$`OR (multivariable)`,1,15),")")
+  # df.out$OR_plot=paste0(substr(df.out$`OR (multivariable)`,1,17),")")
+  df.out$OR_plot=paste0(gsub(",.*$", "", df.out$`OR (multivariable)`),")") 
   df.out <- df.out %>%
-    mutate(OR_plot=recode(OR_plot, "-)" = "-"),
+     mutate(
+       OR_plot=recode(OR_plot, "-)" = "-"),
            label=recode(label,"Position_normal" = "Position",
                         "sex" ="Sex",
                         "parity" ="Parity",
@@ -118,7 +120,10 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
                         "birthweight100" = "Birthweight in 100gr"
                         # "height10" = "Maternal height in 10cm",
                         # "head_circ" = "Head circumference in cm"
-                        )) %>%
+                        ),
+           levels=ifelse((label=="Parity" | label=="Age of the mother" |
+                           label=="Birthweight in 100gr" | label=="Birthweight in 100gr"
+                         | label=="Gestational age (w)"  | label=="Bassin Epines"),"-",levels)) %>%
            # fit_id= factor(fit_id, levels = c("sexmale","sexfmale","age_mother","parity",
            #                                 "birthweight100", "GA_weeks","Position_normalnormal","Position_normalnonnormal",
            #                                 "Bassin_Epines","height_cretes_quan1Q","height_cretes_quan2Q","height_cretes_quan3Q",
@@ -127,14 +132,18 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
            #                                 "head_Bassin_ConjExt_quan5Q"))) %>%
     select(fit_id, label, levels, Total,City, OR_plot, OR, L95, U95)     %>%
     add_row(fit_id=NA, label="Explonatory", levels ="Faktor", Total=NA, City="Lausanne", OR_plot="Lausanne", OR=NA,L95=NA, U95=NA )
-  
+
+    
 
   df.out2$levels = as.character(df.out2$levels)
   df.out2$fit_id = factor(df.out2$fit_id, levels = df.out2$fit_id[order(-df.out2$index)])
   df.out2$City = "Basel"
-  df.out2$OR_plot=paste0(substr(df.out2$`OR (multivariable)`,1,15),")")
+  # df.out2$OR_plot=paste0(substr(df.out2$`OR (multivariable)`,1,17),")")
+  df.out2$OR_plot=paste0(gsub(",.*$", "", df.out2$`OR (multivariable)`),")") 
+
   df.out2 <- df.out2 %>%
-    mutate(OR_plot=recode(OR_plot, "-)" = "-"),
+    mutate(
+      OR_plot=recode(OR_plot, "-)" = "-"),
            label=recode(label,"Position_normal" = "Position",
                         "sex" ="Sex",
                         "parity" ="Parity",
@@ -146,10 +155,12 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
                         "height_cretes_quan" = "Ratio height/Bassin Cretes Q",
                         "head_Bassin_ConjExt_quan" = "head cir/Bassin ConjExt Q",
                         # "Bassin_Cretes" = "Bassin Cretes",
-                        "birthweight100" = "Birthweight in 100gr"
+                        "birthweight100" = "Birthweight in 100gr"),
                         # "height10" = "Maternal height in 10cm",
                         # "head_circ" = "Head circumference in cm"
-           )) %>%
+           levels=ifelse((label=="Parity" | label=="Age of the mother" |
+                            label=="Birthweight in 100gr" | label=="Birthweight in 100gr"
+                          | label=="Gestational age (w)"  | label=="Bassin Epines"),"-",levels)) %>%
     # fit_id= factor(fit_id, levels = c("sexmale","sexfmale","age_mother","parity",
     #                                 "birthweight100", "GA_weeks","Position_normalnormal","Position_normalnonnormal",
     #                                 "Bassin_Epines","height_cretes_quan1Q","height_cretes_quan2Q","height_cretes_quan3Q",
@@ -171,18 +182,17 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
   #                                             "head_Bassin_ConjExt_quan2Q","head_Bassin_ConjExt_quan3Q","head_Bassin_ConjExt_quan4Q",
   #                                             "head_Bassin_ConjExt_quan5Q")))
 
-#   return(df.out.b)
-# }
+
  
   g1 = ggplot(df.out.b, aes(x = as.numeric(OR), xmin = as.numeric(L95), 
                           xmax = as.numeric(U95), y = fit_id, col=City, fill=City)) +
     geom_errorbarh(height = 0.2,position=pd, lwd=1) + 
-    geom_vline(xintercept = 1, linetype = "longdash", 
+    geom_vline(xintercept = 0, linetype = "longdash", 
                colour = "black") + 
     geom_point(aes(size = Number), shape = 22,position=pd) + 
-    scale_x_continuous(trans = "log10") + 
+    # scale_x_continuous(trans = "log10") + 
     # scale_x_continuous( breaks = breaks) + 
-    xlab("Odds ratio and 95% CI (log scale) ") + 
+    xlab("Coeff and 95% CI") + 
     scale_color_manual(" ",
                        breaks=c("Lausanne","Basel"),
                        values = c(mypalette[3],mypalette[2]))+
