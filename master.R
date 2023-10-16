@@ -11,6 +11,8 @@ library(conflicted)
 # library(lmerTest)
 library(ggplot2)
 library(cowplot)
+library(finalfit)
+library(scales)
 
 conflict_prefer("select", "dplyr")
 conflict_prefer("mutate", "dplyr")
@@ -39,7 +41,7 @@ pch_type <- 19
 lwdline <- 1
 size_legend <- 15
 size_legend_title<- 25
-pd <-position_dodge(width=0.3)
+pd <-position_dodge(width=0.4)
 fatten_size <- 4
 plot_title <- 25
 

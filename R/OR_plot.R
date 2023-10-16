@@ -14,6 +14,9 @@ data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
          height10 = height/10,
          Bassin_Cretes10= Bassin_Cretes/10,
          height_cretes = height10/Bassin_Cretes10,
+         height_cretes_quan = cut(height_cretes, breaks=c(quantile( height_cretes, probs = c(0,0.1,0.9,1), na.rm = TRUE)), 
+                                  labels=c("1_Percentile","2_9_Percentile","10_Percentile"), include.lowest=TRUE),
+         height_cretes_quan  = factor(     height_cretes_quan , levels = c("2_9_Percentile", "1_Percentile","10_Percentile")),
          sex = factor( sex, levels = c("male", "female"))) %>%
   group_by(City) %>%
   mutate(Duree_2me_periode_z = (Duree_2me_periode-mean(Duree_2me_periode,na.rm = TRUE))/sd(Duree_2me_periode,na.rm = TRUE)) %>%
@@ -26,109 +29,17 @@ data_laus <- data_com %>%
 data_basel <- data_com %>%
   filter(City=="Basel") 
 
-
-
-
-### Episiotomy, 1= ja, 0 = nein
-
-table(data_laus$Position_normal)
-table(data_laus$Episiotomy)
-table(data_laus$Position_normal,data_laus$Episiotomy)
-
-# Position normal und Episiotomy nein: 966/1062 = 90.96 %
-# Position normal und Episiotomy ja: 9.04 %
-
-# Position nicht normal und Episiotomy nein: 29/83 = 97.6 %
-# Postion nicht normal und Episiotomy ja:  2.4 %
-
-# Ergebniss  Postion stimmt, weniger Eposiotomy bei nicht normaler Postion. OR kleiner 1, aber nicht signifikant.
-
-
-Mod_laus_ep_uni <- data.frame(summary(glm(Episiotomy ~  Position_normal, 
-                                      data = data_laus, family="binomial"))$coefficients) %>%
-  mutate(Est = round(exp(Estimate),2),
-         CIl = round(exp(Estimate - 1.96*`Std..Error`),2),
-         CIu = round(exp(Estimate + 1.96*`Std..Error`),2),
-         Fac = row.names(.)) %>%
-  filter(!Fac =="(Intercept)") %>%
-  #filter(!Fac =="birthweight") %>%
-  select(Fac, Est, CIl,CIu) %>%
-  mutate(City="Lausanne",
-         outcome="Episiotomy")
-
-Mod_laus_ep <- data.frame(summary(glm(Episiotomy ~  sex + parity + Position_normal + age_mother + head_circ + 
-                                        birthweight100 + height10 + GA_weeks + height_cretes + Bassin_Epines+ Bassin_ConjExt,
-                                        data = data_laus, family="binomial"))$coefficients) %>%
-  mutate(Est = round(exp(Estimate),2),
-         CIl = round(exp(Estimate - 1.96*`Std..Error`),2),
-         CIu = round(exp(Estimate + 1.96*`Std..Error`),2),
-         Fac = row.names(.)) %>%
-  filter(!Fac =="(Intercept)") %>%
-  #filter(!Fac =="birthweight") %>%
-  select(Fac, Est, CIl,CIu) %>%
-           mutate(City="Lausanne",
-                  outcome="Episiotomy")
-
-Mod_laus_ep
-
-
-
-
-#Basel Modell
-
-table(data_basel$Position_normal)
-table(data_basel$Episiotomy)
-table(data_basel$Position_normal,data_basel$Episiotomy)
-
-# Position normal und Episiotomy nein: 709/1290 = 54.96 %
-# Position normal und Episiotomy ja: 45.04 %
-
-# Position nicht normal und Episiotomy nein: 29/83 = 54.7 %
-# Postion nicht normal und Episiotomy ja:  45.29 %
-
-
-# Ergebniss Postion normal stimmt, keine Unterschiede zwischen Postion normal und nicht normal, multivariate ein weniger
-# grösser OR, aber immer noch nicht signifakt.
-
-Mod_basel_ep_uni <- data.frame(summary(glm(Episiotomy ~  Position_normal, 
-                                       data = data_basel, family="binomial"))$coefficients) %>%
-  mutate(Est = round(exp(Estimate),2),
-         CIl = round(exp(Estimate - 1.96*`Std..Error`),2),
-         CIu = round(exp(Estimate + 1.96*`Std..Error`),2),
-         Fac = row.names(.)) %>%
-  filter(!Fac =="(Intercept)") %>%
-  #filter(!Fac =="birthweight") %>%
-  select(Fac, Est, CIl,CIu) %>%
-  mutate(City="Basel",    
-         outcome="Episiotomy")
-
-Mod_basel_ep <- data.frame(summary(glm(Episiotomy ~  sex + parity + Position_normal + age_mother + head_circ + 
-                                         birthweight100 + height10 + GA_weeks + height_cretes + Bassin_Epines+ Bassin_ConjExt,
-                                      data = data_basel, family="binomial"))$coefficients) %>%
-  mutate(Est = round(exp(Estimate),2),
-         CIl = round(exp(Estimate - 1.96*`Std..Error`),2),
-         CIu = round(exp(Estimate + 1.96*`Std..Error`),2),
-         Fac = row.names(.)) %>%
-  filter(!Fac =="(Intercept)") %>%
-  #filter(!Fac =="birthweight") %>%
-  select(Fac, Est, CIl,CIu) %>%
-  mutate(City="Basel",    
-         outcome="Episiotomy")
-
-Mod_basel_ep
-
 explanatory = c( "sex","parity","Position_normal","age_mother","head_circ",
-                 "birthweight100","height10","GA_weeks","height_cretes","Bassin_Epines","Bassin_ConjExt")
+                 "birthweight100","height10","GA_weeks","height_cretes_quan","Bassin_Epines","Bassin_ConjExt")
 dependent = "Episiotomy"
 
-
 Mod_laus_or <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother + head_circ + 
-                     birthweight100 + height10 + GA_weeks + height_cretes + Bassin_Epines+ Bassin_ConjExt,
+                     birthweight100 + height10 + GA_weeks + height_cretes_quan + Bassin_Epines+ Bassin_ConjExt,
                    data = data_laus, family="binomial")
 
 
 Mod_basel_or <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother + head_circ + 
-                      birthweight100 + height10 + GA_weeks + height_cretes + Bassin_Epines+ Bassin_ConjExt,
+                      birthweight100 + height10 + GA_weeks + height_cretes_quan + Bassin_Epines+ Bassin_ConjExt,
                     data = data_basel, family="binomial")
 
 plot_epi<- data_com %>%
@@ -136,7 +47,7 @@ plot_epi<- data_com %>%
             title_text_size = 15,
             breaks = c(0.0, 0.2,0.4,0.6, 0.8, 1.0, 1.2, 1.4,1.6, 1.8,2.0,2.2,2.4,2.6,2.8,3.0))
 
-cowplot::save_plot("output/plot_epi.pdf", plot_epi,base_height=6,base_width=12)
+cowplot::save_plot("output/plot_epi.pdf", plot_epi,base_height=7,base_width=14)
 
 
 
