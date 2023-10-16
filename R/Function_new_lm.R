@@ -1,7 +1,7 @@
 or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL, 
           factorlist = NULL, glmfit = NULL, glmfit2=NULL,confint_type = NULL, remove_ref = FALSE, 
           breaks = NULL, column_space = c(-0.05, 0, 0.05,0.1), dependent_label = NULL, 
-          prefix = "", suffix = ": Coeff (95% CI)", 
+          prefix = "", suffix = ": Coefficient (95% CI)", 
           table_text_size = 4, title_text_size = 20, plot_opts = NULL, 
           table_opts = NULL, ...) 
 {
@@ -192,7 +192,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
     geom_point(aes(size = Number), shape = 22,position=pd) + 
     # scale_x_continuous(trans = "log10") + 
     # scale_x_continuous( breaks = breaks) + 
-    xlab("Coeff and 95% CI") + 
+    xlab("Coefficient and 95% CI") + 
     scale_color_manual(" ",
                        breaks=c("Lausanne","Basel"),
                        values = c(mypalette[3],mypalette[2]))+
