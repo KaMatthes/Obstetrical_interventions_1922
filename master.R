@@ -49,3 +49,6 @@ size_axis <- 22
 size_axis_title <- 22
 size_plot_title <-15
 size_legend_text <- 20
+
+
+

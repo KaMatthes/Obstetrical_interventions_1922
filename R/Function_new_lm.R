@@ -1,4 +1,4 @@
-or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL, 
+or_plot_2_lm <- function (.data, dependent, explanatory, random_effect = NULL, 
           factorlist = NULL, glmfit = NULL, glmfit2=NULL,confint_type = NULL, remove_ref = FALSE, 
           breaks = NULL, column_space = c(-0.05, 0, 0.05,0.1), dependent_label = NULL, 
           prefix = "", suffix = ": Coefficient (95% CI)", 
@@ -116,6 +116,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
                         # "height_cretes" = "Ratio height/Bassin Cretes",
                         "height_cretes_quan" = "Ratio height/Bassin Cretes Q",
                         "head_Bassin_ConjExt_quan" = "head cir/Bassin ConjExt Q",
+                        "height_weight_quan" = "height/birthweight Q",
                         # "Bassin_Cretes" = "Bassin Cretes",
                         "birthweight100" = "Birthweight in 100gr"
                         # "height10" = "Maternal height in 10cm",
@@ -154,6 +155,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
                         # "height_cretes" = "Ratio height/Bassin Cretes",
                         "height_cretes_quan" = "Ratio height/Bassin Cretes Q",
                         "head_Bassin_ConjExt_quan" = "head cir/Bassin ConjExt Q",
+                        "height_weight_quan" = "height/birthweight Q",
                         # "Bassin_Cretes" = "Bassin Cretes",
                         "birthweight100" = "Birthweight in 100gr"),
                         # "height10" = "Maternal height in 10cm",
@@ -204,7 +206,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
                       guide = FALSE)+
 
     theme_classic(11) + 
-    theme(axis.title.x = element_text(size=15), 
+    theme(axis.title.x = element_text(size=12), 
           axis.text.x = element_text(size=12), 
           axis.title.y = element_blank(), 
           axis.text.y = element_blank(), 
@@ -216,13 +218,13 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
   
   t1 = ggplot(df.out, aes(x = as.numeric(OR), y = fit_id)) + 
     annotate("text", x = column_space[1], y = df.out$fit_id, 
-             label = df.out[, 2], hjust = 0, size = c(rep(4,17), 5)) + 
+             label = df.out[, 2], hjust = 0, size = c(rep(4,20), 5)) + 
     annotate("text", x = column_space[2], y = df.out$fit_id,
-             label = df.out[, 3], hjust = 1, size = c(rep(4,17), 5)) +
+             label = df.out[, 3], hjust = 1, size = c(rep(4,20), 5)) +
     annotate("text", x = column_space[3], y = df.out$fit_id,
-             label = df.out[, 6], hjust = 1, size = c(rep(4,17),5)) +
+             label = df.out[, 6], hjust = 1, size = c(rep(4,20),5)) +
     annotate("text", x = column_space[4], y = df.out2$fit_id,
-             label = df.out2[, 6], hjust = 1, size = c(rep(4,17), 5)) +
+             label = df.out2[, 6], hjust = 1, size = c(rep(4,20), 5)) +
     theme_classic(11) + 
     theme(axis.title.x = element_text(colour = "white"), 
                               axis.text.x = element_text(colour = "white"), axis.title.y = element_blank(), 
@@ -232,7 +234,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
   t1 = t1 + table_opts
   title = plot_title(.data, dependent, dependent_label = dependent_label, 
                      prefix = prefix, suffix = suffix)
-  gridExtra::grid.arrange(t1, g1, ncol = 2, widths = c(3, 2), 
+  gridExtra::grid.arrange(t1, g1, ncol = 2, widths = c(2.5, 2), 
                           top = grid::textGrob(title, x = 0.02, y = 0.2, gp = grid::gpar(fontsize = title_text_size), 
                                                just = "left"))
 }

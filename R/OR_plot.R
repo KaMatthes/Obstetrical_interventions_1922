@@ -1,3 +1,6 @@
+source("R/function_new.R")
+source("R/function_new_lm.R")
+
 data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
   mutate(Mecanisme_normal=ifelse(Mecanisme_normal==0,1,0),
          Mecanisme_normal= as.factor(Mecanisme_normal),
@@ -5,6 +8,7 @@ data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
          Position_normal= as.factor(Position_normal),
          Episiotomy = as.factor(Episiotomy),
          sex= as.factor(sex),
+         stillbirth= as.factor(stillbirth),
          # sex=recode(sex, 
          #            "0" = "male",
          #            "1" ="female" ),
@@ -13,6 +17,10 @@ data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
          birthweight100 = birthweight/100,
          height10 = height/10,
          Bassin_Cretes10= Bassin_Cretes/10,
+         height_weight = height/birthweight,
+         height_weight_quan = cut(height_weight, breaks=c(quantile(height_weight, probs = c(seq(0,1, by=0.25)), na.rm = TRUE)), 
+                                  labels=c("1Q","2Q","3Q","4Q"), include.lowest=TRUE),
+         height_weight_quan  = factor( height_weight_quan , levels = c("1Q","2Q","3Q","4Q")),
          height_cretes = height10/Bassin_Cretes10,
          height_cretes_quan = cut(height_cretes, breaks=c(quantile( height_cretes, probs = c(seq(0,1, by=0.25)), na.rm = TRUE)), 
                                   labels=c("1Q","2Q","3Q","4Q"), include.lowest=TRUE),
@@ -33,19 +41,22 @@ data_laus <- data_com %>%
 data_basel <- data_com %>%
   filter(City=="Basel") 
 
-explanatory = c( "sex","parity","Position_normal","age_mother","head_Bassin_ConjExt_quan",
-                 "birthweight100","GA_weeks","height_cretes_quan","Bassin_Epines")
+
+# Episiotomy
+
+explanatory = c( "sex","parity","Position_normal","age_mother","height_weight_quan","head_Bassin_ConjExt_quan",
+                 "GA_weeks","height_cretes_quan","Bassin_Epines")
 
 
 dependent = "Episiotomy"
 
-Mod_laus_or <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother + head_Bassin_ConjExt_quan +
-                     birthweight100  + GA_weeks + height_cretes_quan + Bassin_Epines,
+Mod_laus_or <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother + height_weight_quan+ head_Bassin_ConjExt_quan 
+                   + GA_weeks + height_cretes_quan + Bassin_Epines,
                    data = data_laus, family="binomial")
 
 
-Mod_basel_or <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother + head_Bassin_ConjExt_quan+ 
-                      birthweight100 + GA_weeks + height_cretes_quan + Bassin_Epines,
+Mod_basel_or <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother + height_weight_quan+ head_Bassin_ConjExt_quan
+                    + GA_weeks + height_cretes_quan + Bassin_Epines,
                     data = data_basel, family="binomial")
 
 plot_epi <- data_com %>%
@@ -59,19 +70,19 @@ cowplot::save_plot("output/plot_epi.pdf", plot_epi,base_height=7,base_width=14)
 
 ### Mecanisme_normal, 1 = nicht normal, 0 = normal Mecanisme_normal 
 
-explanatory = c( "sex","parity","Position_normal","age_mother","head_Bassin_ConjExt_quan",
-                 "birthweight100","GA_weeks","height_cretes_quan","Bassin_Epines")
+explanatory = c( "sex","parity","Position_normal","age_mother","height_weight_quan","head_Bassin_ConjExt_quan"
+                 ,"GA_weeks","height_cretes_quan","Bassin_Epines")
 
 
 dependent = "Mecanisme_normal"
 
-Mod_laus_or <- glm(Mecanisme_normal  ~  sex + parity + Position_normal + age_mother + head_Bassin_ConjExt_quan +
-                     birthweight100  + GA_weeks + height_cretes_quan + Bassin_Epines,
+Mod_laus_or <- glm(Mecanisme_normal  ~  sex + parity + Position_normal + age_mother + height_weight_quan+head_Bassin_ConjExt_quan +
+                      + GA_weeks + height_cretes_quan + Bassin_Epines,
                    data = data_laus, family="binomial")
 
 
-Mod_basel_or <- glm(Mecanisme_normal  ~  sex + parity + Position_normal + age_mother + head_Bassin_ConjExt_quan+ 
-                      birthweight100 + GA_weeks + height_cretes_quan + Bassin_Epines,
+Mod_basel_or <- glm(Mecanisme_normal  ~  sex + parity + Position_normal + age_mother +height_weight_quan+ head_Bassin_ConjExt_quan+ 
+                      + GA_weeks + height_cretes_quan + Bassin_Epines,
                     data = data_basel, family="binomial")
 
 plot_mec <- data_com %>%
@@ -84,24 +95,48 @@ cowplot::save_plot("output/plot_mec.pdf", plot_mec,base_height=7,base_width=14)
 
 # Dauer der Ausbreitung Duree_2me_periode_z
 
-explanatory = c( "sex","parity","Position_normal","age_mother","head_Bassin_ConjExt_quan",
-                 "birthweight100","GA_weeks","height_cretes_quan","Bassin_Epines")
+explanatory = c( "sex","parity","Position_normal","age_mother","head_Bassin_ConjExt_quan","height_weight_quan",
+                 "GA_weeks","height_cretes_quan","Bassin_Epines")
 
 
 dependent = "Duree_2me_periode_z"
 
 Mod_laus_or <- glm(Duree_2me_periode_z  ~  sex + parity + Position_normal + age_mother + head_Bassin_ConjExt_quan +
-                     birthweight100  + GA_weeks + height_cretes_quan + Bassin_Epines,
+                     height_weight_quan  + GA_weeks + height_cretes_quan + Bassin_Epines,
                    data = data_laus)
 
 
 Mod_basel_or <- glm(Duree_2me_periode_z  ~  sex + parity + Position_normal + age_mother + head_Bassin_ConjExt_quan+ 
-                      birthweight100 + GA_weeks + height_cretes_quan + Bassin_Epines,
+                      height_weight_quan + GA_weeks + height_cretes_quan + Bassin_Epines,
                     data = data_basel)
 
 plot_du <- data_com %>%
-  or_plot_2(dependent,explanatory, glmfit = Mod_laus_or,glmfit2 = Mod_basel_or,
+  or_plot_2_lm(dependent,explanatory, glmfit = Mod_laus_or,glmfit2 = Mod_basel_or,
             title_text_size = 15)
 
 cowplot::save_plot("output/plot_du.pdf", plot_du,base_height=7,base_width=14)
+
+
+# Stillbirth
+
+explanatory = c( "sex","Position_normal","Episiotomy", "Mecanisme_normal")
+
+
+dependent = "stillbirth"
+
+Mod_laus_still <- glm(stillbirth ~  Position_normal,
+                   data = data_laus, family="binomial")
+
+
+Mod_basel_or <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother + height_weight_quan+ head_Bassin_ConjExt_quan
+                    + GA_weeks + height_cretes_quan + Bassin_Epines,
+                    data = data_basel, family="binomial")
+
+plot_epi <- data_com %>%
+  or_plot_2(dependent,explanatory, glmfit = Mod_laus_or,glmfit2 = Mod_basel_or,
+            title_text_size = 15,
+            breaks = c(0.0, 0.2,0.4,0.6, 0.8, 1.0, 1.2, 1.4,1.6, 1.8,2.0,2.2,2.4,2.6,2.8,3.0))
+
+cowplot::save_plot("output/plot_epi.pdf", plot_epi,base_height=7,base_width=14)
+
 
