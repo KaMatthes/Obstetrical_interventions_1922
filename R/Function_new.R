@@ -208,13 +208,13 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
   
   t1 = ggplot(df.out, aes(x = as.numeric(OR), y = fit_id)) + 
     annotate("text", x = column_space[1], y = df.out$fit_id, 
-             label = df.out[, 2], hjust = 0, size = c(rep(4,20), 5)) + 
+             label = df.out[, 2], hjust = 0, size = c(rep(4,19), 5)) + 
     annotate("text", x = column_space[2], y = df.out$fit_id,
-             label = df.out[, 3], hjust = 1, size = c(rep(4,20), 5)) +
+             label = df.out[, 3], hjust = 1, size = c(rep(4,19), 5)) +
     annotate("text", x = column_space[3], y = df.out$fit_id,
-             label = df.out[, 6], hjust = 1, size = c(rep(4,20),5)) +
+             label = df.out[, 6], hjust = 1, size = c(rep(4,19),5)) +
     annotate("text", x = column_space[4], y = df.out2$fit_id,
-             label = df.out2[, 6], hjust = 1, size = c(rep(4,20), 5)) +
+             label = df.out2[, 6], hjust = 1, size = c(rep(4,19), 5)) +
     theme_classic(11) + 
     theme(axis.title.x = element_text(colour = "white"), 
                               axis.text.x = element_text(colour = "white"), axis.title.y = element_blank(), 
