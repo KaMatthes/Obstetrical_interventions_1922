@@ -34,6 +34,7 @@ data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
   mutate(Duree_2me_periode_z = (Duree_2me_periode-mean(Duree_2me_periode,na.rm = TRUE))/sd(Duree_2me_periode,na.rm = TRUE)) %>%
   ungroup()
 
+
 data_laus <- data_com %>%
   filter(City=="Lausanne") 
 

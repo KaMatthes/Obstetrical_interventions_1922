@@ -27,17 +27,17 @@ data_laus <- read.xlsx("data/laus_cleaned_2023-01-23.xlsx",detectDates = TRUE) %
                     "1" ="female"))
   
 
-data_basel <- read.xlsx("data/Daten_Basel.xlsx",detectDates = TRUE) %>%
+data_basel <- read.xlsx("data/Daten_Basel_new.xlsx",detectDates = TRUE) %>%
   filter(Jahr >= 1921 & Jahr <= 1923) %>%
   filter(TWIN =="no") %>%
   mutate(City= "Basel",
          DauerEroeffnungH = DauerEroeffnungH *60,
          Position_normal = ifelse(Presentation=="occ-post" |Presentation=="occ-post2", 1, 0),
-         Mecanisme_normal = ifelse(Ceasarean =="no" & Forceps =="no"  & Episiotomy =="no", 1, 0),
+         Mecanisme_normal = ifelse(Ceasarean ==0 & Forceps ==0  & Episiotomy ==0, 1, 0),
          Normal = Mecanisme_normal,
-         Ceasarean = recode(Ceasarean, "yes" = "1","no" = "0") ,    
-         Forceps = recode(Forceps, "yes" = "1","no" = "0"),
-         Episiotomy = recode(Episiotomy, "yes" = "1","no" = "0"),
+         # Ceasarean = recode(Ceasarean, "yes" = "1","no" = "0") ,    
+         # Forceps = recode(Forceps, "yes" = "1","no" = "0"),
+         # Episiotomy = recode(Episiotomy, "yes" = "1","no" = "0"),
          Normal = as.factor(Normal),
          Episiotomy  = as.factor(Episiotomy ),
          Ceasarean = as.factor(Ceasarean),
