@@ -95,7 +95,7 @@ explanatory = c( "sex","parity","Position_normal","age_mother","height_weight_qu
 dependent = "Mecanisme_normal"
 
 Mod_laus_me <- glm(Mecanisme_normal  ~  sex + parity + Position_normal + age_mother + height_weight_quan+head_Bassin_ConjExt_quan +
-                      + GA_weeks + height_cretes_quan ,
+                     + GA_weeks + height_cretes_quan ,
                    data = data_laus, family="binomial")
 
 
@@ -146,8 +146,8 @@ Mod_basel_or <- glm(Duree_2me_periode_z  ~  sex + parity + Position_normal + age
 
 plot_du <- data_com %>%
   or_plot_2_lm(dependent,explanatory, glmfit = Mod_laus_or,glmfit2 = Mod_basel_or,
-            title_text_size = 15,
-            dependent_label="Expulsion phase in z-values")
+               title_text_size = 15,
+               dependent_label="Expulsion phase in z-values")
 
 cowplot::save_plot("output/plot_du.pdf", plot_du,base_height=7,base_width=14)
 
