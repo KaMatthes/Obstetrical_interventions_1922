@@ -59,7 +59,7 @@ data_basel <- data_com %>%
   filter(City=="Basel") 
 
 
-explanatory = c( "sex","parity","Position_normal","age_mother"," Bassin_Cretes10","birthweight100",
+explanatory = c( "sex","parity","Position_normal","age_mother"," Bassin_Cretes","birthweight100",
                  "GA_weeks","head_ConjExt")
 
 # data_com_reduced <-  data_com %>%
@@ -76,11 +76,11 @@ explanatory = c( "sex","parity","Position_normal","age_mother"," Bassin_Cretes10
 
 dependent = "Episiotomy"
 
-Mod_laus_ep <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother +  Bassin_Cretes10+birthweight100+ 
+Mod_laus_ep <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
                      GA_weeks +  head_ConjExt,
                    data = data_laus, family="binomial")
 
-Mod_basel_ep <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother +  Bassin_Cretes10+birthweight100+ 
+Mod_basel_ep <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
                     GA_weeks +   head_ConjExt,
                     data = data_basel, family="binomial")
 
@@ -112,12 +112,12 @@ write.xlsx(table_data_basel_ep ,paste0("output/table_data_basel_cretes_ep.xlsx")
 
 dependent = "Mecanisme_normal"
 
-Mod_laus_me <- glm(Mecanisme_normal  ~ sex + parity + Position_normal + age_mother +  Bassin_Cretes10+birthweight100+ 
+Mod_laus_me <- glm(Mecanisme_normal  ~ sex + parity + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
                      GA_weeks +   head_ConjExt,
                    data = data_laus, family="binomial")
 
 
-Mod_basel_me <- glm(Mecanisme_normal  ~   sex + parity + Position_normal + age_mother +  Bassin_Cretes10+birthweight100+ 
+Mod_basel_me <- glm(Mecanisme_normal  ~   sex + parity + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
                       GA_weeks +   head_ConjExt,
                     data = data_basel, family="binomial")
 
@@ -150,12 +150,12 @@ write.xlsx(table_data_basel_me ,paste0("output/table_data_basel_cretes_me.xlsx")
 
 dependent = "Duree_2me_periode_z"
 
-Mod_laus_or <- glm(Duree_2me_periode_z  ~  sex + parity + Position_normal + age_mother +  Bassin_Cretes10+birthweight100+ 
+Mod_laus_or <- glm(Duree_2me_periode_z  ~  sex + parity + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
                      GA_weeks +   head_ConjExt,
                    data = data_laus)
 
 
-Mod_basel_or <- glm(Duree_2me_periode_z  ~   sex + parity + Position_normal + age_mother +  Bassin_Cretes10+birthweight100+ 
+Mod_basel_or <- glm(Duree_2me_periode_z  ~   sex + parity + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
                       GA_weeks +   head_ConjExt,
                     data = data_basel)
 

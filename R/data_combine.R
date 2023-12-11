@@ -9,8 +9,8 @@ data_laus <- read.xlsx("data/laus_cleaned_2023-01-23.xlsx",detectDates = TRUE) %
           Duree_2me_periode = as.numeric(Duree_2me_periode),
           Duree_3me_periode = as.numeric(Duree_3me_periode), 
           Position_normal = ifelse(Position=="OIGA" | Position=="OIDA", 1, 0),
-          Mecanisme = ifelse(Mecanisme=="NULL", "normal", Mecanisme),
-          Mecanisme_normal = ifelse(Mecanisme =="normal", 1, 0),
+          # Mecanisme = ifelse(Mecanisme=="NULL", "normal", Mecanisme),
+          Mecanisme_normal = ifelse(Mecanisme =="forceps" | Mecanisme =="cesarienne"  , 1, 0),
           Mecanisme_n = 1) %>%
   pivot_wider(names_from=Mecanisme,  values_from = Mecanisme_n, values_fill = 0)  %>%
   rename(Normal = normal,
@@ -28,17 +28,17 @@ data_laus <- read.xlsx("data/laus_cleaned_2023-01-23.xlsx",detectDates = TRUE) %
   
 
 data_basel <- read.xlsx("data/Daten_Basel_new.xlsx",detectDates = TRUE) %>%
-  filter(Jahr >= 1921 & Jahr <= 1923) %>%
+  filter(Jahr >= 1921 & Jahr <= 1924) %>%
   filter(TWIN =="no") %>%
   mutate(City= "Basel",
          DauerEroeffnungH = DauerEroeffnungH *60,
-         Position_normal = ifelse(Presentation=="occ-post" |Presentation=="occ-post2", 1, 0),
-         Mecanisme_normal = ifelse(Ceasarean ==0 & Forceps ==0  & Episiotomy ==0, 1, 0),
-         Normal = Mecanisme_normal,
+         Position_normal = ifelse(Presentation=="occ-post" | Presentation=="occ-post2", 1, 0),
+         Mecanisme_normal = ifelse(Ceasarean ==1 | Forceps ==1, 1, 0) ,
+         # Normal = Mecanisme_normal,
          # Ceasarean = recode(Ceasarean, "yes" = "1","no" = "0") ,    
          # Forceps = recode(Forceps, "yes" = "1","no" = "0"),
          # Episiotomy = recode(Episiotomy, "yes" = "1","no" = "0"),
-         Normal = as.factor(Normal),
+         # Normal = as.factor(Normal),
          Episiotomy  = as.factor(Episiotomy ),
          Ceasarean = as.factor(Ceasarean),
          Forceps = as.factor(Forceps)) %>%

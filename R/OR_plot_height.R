@@ -1,5 +1,6 @@
-source("R/function_new.R")
-source("R/function_new_lm.R")
+source("R/Function_new.R")
+source("R/Function_new_lm.R")
+source("R/Function_mech.R")
 
 data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
   mutate(Mecanisme_normal=ifelse(Mecanisme_normal==0,1,0),
@@ -62,12 +63,12 @@ data_basel <- data_com %>%
 explanatory = c( "sex","parity","Position_normal","age_mother","height10","birthweight100",
                  "GA_weeks","head_ConjExt")
 
-# data_com_reduced <-  data_com %>%
-#   select('Bassin_Cretes', 'height','birthweight','head_ConjExt') %>%
-#   mutate(head_ConjExt= as.numeric(head_ConjExt))
-# 
-# 
-# cor_mat <- round(cor(data_com_reduced, use="pairwise.complete.obs"), 2)
+data_com_reduced <-  data_com %>%
+  select('Bassin_Cretes', 'height','birthweight','head_ConjExt', "head_circ", "Bassin_ConjExt") %>%
+  mutate(head_ConjExt= as.numeric(head_ConjExt))
+
+
+cor_mat <- round(cor(data_com_reduced, use="pairwise.complete.obs"), 2)
 
 # Episiotomy
 
@@ -110,19 +111,23 @@ write.xlsx(table_data_basel_ep ,paste0("output/table_data_basel_height_ep.xlsx")
 
 ### Mecanisme_normal, 1 = nicht normal, 0 = normal Mecanisme_normal 
 
+
+explanatory = c( "sex","parity","Position_normal","age_mother",
+                 "GA_weeks", "head_circ", "Bassin_ConjExt")
+
 dependent = "Mecanisme_normal"
 
-Mod_laus_me <- glm(Mecanisme_normal  ~ sex + parity + Position_normal + age_mother + height10+birthweight100+ 
-                     GA_weeks +   head_ConjExt,
+Mod_laus_me <- glm(Mecanisme_normal  ~ sex + parity + Position_normal + age_mother + 
+                     GA_weeks +  head_circ + Bassin_ConjExt,
                    data = data_laus, family="binomial")
 
 
-Mod_basel_me <- glm(Mecanisme_normal  ~   sex + parity + Position_normal + age_mother + height10+birthweight100+ 
-                      GA_weeks +   head_ConjExt,
+Mod_basel_me <- glm(Mecanisme_normal  ~   sex + parity + Position_normal + age_mother+ 
+                      GA_weeks +  head_circ + Bassin_ConjExt,
                     data = data_basel, family="binomial")
 
 plot_mec <- data_com %>%
-  or_plot_2(dependent,explanatory, glmfit = Mod_laus_me,glmfit2 = Mod_basel_me,
+  or_plot_mec(dependent,explanatory, glmfit = Mod_laus_me,glmfit2 = Mod_basel_me,
             title_text_size = 15,
             # breaks = c(0.0, 0.2,0.4,0.6, 0.8, 1.0, 1.2, 1.4,1.6, 1.8,2.0,2.2,2.4,2.6,2.8,3.0),
             dependent_label="Mechanism")
@@ -147,6 +152,11 @@ table_data_basel_me <- data_basel %>%
 write.xlsx(table_data_basel_me ,paste0("output/table_data_basel_height_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
 
 # Dauer der Ausbreitung Duree_2me_periode_z
+
+
+explanatory = c( "sex","parity","Position_normal","age_mother","height10","birthweight100",
+                 "GA_weeks","head_ConjExt")
+
 
 dependent = "Duree_2me_periode_z"
 

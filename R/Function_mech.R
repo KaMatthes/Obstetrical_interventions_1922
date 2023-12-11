@@ -1,4 +1,4 @@
-or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL, 
+or_plot_mec <- function (.data, dependent, explanatory, random_effect = NULL, 
           factorlist = NULL, glmfit = NULL, glmfit2=NULL,confint_type = NULL, remove_ref = FALSE, 
           breaks = NULL, column_space = c(-0.1, 0, 0.05,0.1), dependent_label = NULL, 
           prefix = "", suffix = ": OR (95% CI)", 
@@ -109,7 +109,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
                         "parity" ="Parity",
                         "age_mother" ="Age of the mother",
                         "GA_weeks" = "Gestational age (w)",
-                        # "Bassin_ConjExt" = "Bassin ConjExt",
+                        "Bassin_ConjExt" = "Bassin ConjExt",
                         # "Bassin_Epines" = "Bassin Epines",
                         # "height_cretes" = "Ratio height/Bassin Cretes",
                         # "height_cretes_quan" = "Ratio height/Bassin Cretes Q",
@@ -118,8 +118,8 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
                         "Bassin_Cretes" = "Bassin Cretes in cm",
                         "birthweight100" = "Birthweight in 100gr",
                         "height10" = "Maternal height in 10cm",
-                        "head_ConjExt" = "Bassin ConjExt-head circ."
-                        # "head_circ" = "Head circumference in cm"
+                        "head_ConjExt" = "Bassin ConjExt-head circ.",
+                        "head_circ" = "Head circumference in cm"
                         )) %>%
            # fit_id= factor(fit_id, levels = c("sexmale","sexfmale","age_mother","parity",
            #                                 "birthweight100", "GA_weeks","Position_normalnormal","Position_normalnonnormal",
@@ -142,7 +142,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
                         "parity" ="Parity",
                         "age_mother" ="Age of the mother",
                         "GA_weeks" = "Gestational age (w)",
-                        # "Bassin_ConjExt" = "Bassin ConjExt",
+                        "Bassin_ConjExt" = "Bassin ConjExt",
                         # "Bassin_Epines" = "Bassin Epines",
                         # "height_cretes" = "Ratio height/Bassin Cretes",
                         # "height_cretes_quan" = "Ratio height/Bassin Cretes Q",
@@ -151,8 +151,8 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
                         "Bassin_Cretes" = "Bassin Cretes in cm",
                         "birthweight100" = "Birthweight in 100gr",
                         "height10" = "Maternal height in 10cm",
-                        "head_ConjExt" = "head circ.-Bassin ConjExt"
-                        # "head_circ" = "Head circumference in cm"
+                        "head_ConjExt" = "head circ.-Bassin ConjExt",
+                        "head_circ" = "Head circumference in cm"
            )) %>%
     # fit_id= factor(fit_id, levels = c("sexmale","sexfmale","age_mother","parity",
     #                                 "birthweight100", "GA_weeks","Position_normalnormal","Position_normalnonnormal",
@@ -210,13 +210,13 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
   
   t1 = ggplot(df.out, aes(x = as.numeric(OR), y = fit_id)) + 
     annotate("text", x = column_space[1], y = df.out$fit_id, 
-             label = df.out[, 2], hjust = 0, size = c(rep(4,12), 5)) + 
+             label = df.out[, 2], hjust = 0, size = c(rep(4,9), 5)) + 
     annotate("text", x = column_space[2], y = df.out$fit_id,
-             label = df.out[, 3], hjust = 1, size = c(rep(4,12), 5)) +
+             label = df.out[, 3], hjust = 1, size = c(rep(4,9), 5)) +
     annotate("text", x = column_space[3], y = df.out$fit_id,
-             label = df.out[, 6], hjust = 1, size = c(rep(4,12),5)) +
+             label = df.out[, 6], hjust = 1, size = c(rep(4,9),5)) +
     annotate("text", x = column_space[4], y = df.out2$fit_id,
-             label = df.out2[, 6], hjust = 1, size = c(rep(4,12), 5)) +
+             label = df.out2[, 6], hjust = 1, size = c(rep(4,9), 5)) +
     theme_classic(11) + 
     theme(axis.title.x = element_text(colour = "white"), 
                               axis.text.x = element_text(colour = "white"), axis.title.y = element_blank(), 
