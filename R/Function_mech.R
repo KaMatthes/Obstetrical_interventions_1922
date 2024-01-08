@@ -119,8 +119,10 @@ or_plot_mec <- function (.data, dependent, explanatory, random_effect = NULL,
                         "birthweight100" = "Birthweight in 100gr",
                         "height10" = "Maternal height in 10cm",
                         "head_ConjExt" = "Bassin ConjExt-head circ.",
-                        "head_circ" = "Head circumference in cm"
-                        )) %>%
+                        "head_circ" = "Head circumference in cm"),
+    levels=ifelse((label=="Parity" | label=="Age of the mother"
+                   | label=="Gestational age (w)"  | label=="Bassin ConjExt" 
+                   | label=="Head circumference in cm"),"-",levels)) %>%
            # fit_id= factor(fit_id, levels = c("sexmale","sexfmale","age_mother","parity",
            #                                 "birthweight100", "GA_weeks","Position_normalnormal","Position_normalnonnormal",
            #                                 "Bassin_Epines","height_cretes_quan1Q","height_cretes_quan2Q","height_cretes_quan3Q",
@@ -152,8 +154,10 @@ or_plot_mec <- function (.data, dependent, explanatory, random_effect = NULL,
                         "birthweight100" = "Birthweight in 100gr",
                         "height10" = "Maternal height in 10cm",
                         "head_ConjExt" = "head circ.-Bassin ConjExt",
-                        "head_circ" = "Head circumference in cm"
-           )) %>%
+                        "head_circ" = "Head circumference in cm"),
+                        levels=ifelse((label=="Parity" | label=="Age of the mother"
+                                       | label=="Gestational age (w)"  | label=="Bassin ConjExt" 
+                                       | label=="Head circumference in cm"),"-",levels)) %>%
     # fit_id= factor(fit_id, levels = c("sexmale","sexfmale","age_mother","parity",
     #                                 "birthweight100", "GA_weeks","Position_normalnormal","Position_normalnonnormal",
     #                                 "Bassin_Epines","height_cretes_quan1Q","height_cretes_quan2Q","height_cretes_quan3Q",

@@ -2,8 +2,7 @@ source("R/function_new.R")
 source("R/function_new_lm.R")
 
 data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
-  mutate(Mecanisme_normal=ifelse(Mecanisme_normal==0,1,0),
-         Mecanisme_normal= as.factor(Mecanisme_normal),
+  mutate(
          Position_normal=ifelse(Position_normal==0,1,0),
          Position_normal= as.factor(Position_normal),
          Episiotomy = as.factor(Episiotomy),
