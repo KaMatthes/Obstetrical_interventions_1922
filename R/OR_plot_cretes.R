@@ -59,7 +59,7 @@ data_basel <- data_com %>%
   filter(City=="Basel") 
 
 
-explanatory = c( "sex","parity","Position_normal","age_mother"," Bassin_Cretes","birthweight100",
+explanatory = c( "sex","parity","Position_normal","age_mother","Bassin_Cretes","birthweight100",
                  "GA_weeks","head_ConjExt")
 
 # data_com_reduced <-  data_com %>%
