@@ -35,10 +35,11 @@ data_basel <- read.xlsx("data/Daten_Basel_new.xlsx",detectDates = TRUE) %>%
          Position_normal = ifelse(Presentation=="occ-post" | Presentation=="occ-post2", 1, 0),
          Mecanisme_normal = ifelse(Ceasarean ==1 | Forceps ==1, 1, 0) ,
          # Normal = Mecanisme_normal,
-         # Ceasarean = recode(Ceasarean, "yes" = "1","no" = "0") ,    
+         # Ceasarean = recode(Ceasarean, "yes" = "1","no" = ""0") ,    
          # Forceps = recode(Forceps, "yes" = "1","no" = "0"),
          # Episiotomy = recode(Episiotomy, "yes" = "1","no" = "0"),
          # Normal = as.factor(Normal),
+         Episiotomy = ifelse(Episiotomy==1 & Forceps==1, 0, Episiotomy),
          Episiotomy  = as.factor(Episiotomy ),
          Ceasarean = as.factor(Ceasarean),
          Forceps = as.factor(Forceps)) %>%

@@ -109,42 +109,42 @@ table_data_basel_ep <- data_basel %>%
 write.xlsx(table_data_basel_ep ,paste0("output/table_data_basel_cretes_ep.xlsx"), rowNames=FALSE, overwrite = TRUE)
 
 ### Mecanisme_normal, 1 = nicht normal, 0 = normal Mecanisme_normal 
-
-dependent = "Mecanisme_normal"
-
-Mod_laus_me <- glm(Mecanisme_normal  ~ sex + parity + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
-                     GA_weeks +   head_ConjExt,
-                   data = data_laus, family="binomial")
-
-
-Mod_basel_me <- glm(Mecanisme_normal  ~   sex + parity + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
-                      GA_weeks +   head_ConjExt,
-                    data = data_basel, family="binomial")
-
-plot_mec <- data_com %>%
-  or_plot_2(dependent,explanatory, glmfit = Mod_laus_me,glmfit2 = Mod_basel_me,
-            title_text_size = 15,
-            # breaks = c(0.0, 0.2,0.4,0.6, 0.8, 1.0, 1.2, 1.4,1.6, 1.8,2.0,2.2,2.4,2.6,2.8,3.0),
-            dependent_label="Mechanism")
-
-cowplot::save_plot("output/plot_cretes_mec.pdf", plot_mec,base_height=5,base_width=14)
-
-
-
-
-table_data_laus_me <- data_laus %>%
-  finalfit(dependent, explanatory,glmfit = Mod_laus_me) 
-
-
-write.xlsx(table_data_laus_me ,paste0("output/table_data_laus_cretes_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
-
-
-
-table_data_basel_me <- data_basel %>%
-  finalfit(dependent, explanatory,glmfit = Mod_basel_me) 
-
-
-write.xlsx(table_data_basel_me ,paste0("output/table_data_basel_cretes_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
+# 
+# dependent = "Mecanisme_normal"
+# 
+# Mod_laus_me <- glm(Mecanisme_normal  ~ sex + parity + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
+#                      GA_weeks +   head_ConjExt,
+#                    data = data_laus, family="binomial")
+# 
+# 
+# Mod_basel_me <- glm(Mecanisme_normal  ~   sex + parity + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
+#                       GA_weeks +   head_ConjExt,
+#                     data = data_basel, family="binomial")
+# 
+# plot_mec <- data_com %>%
+#   or_plot_2(dependent,explanatory, glmfit = Mod_laus_me,glmfit2 = Mod_basel_me,
+#             title_text_size = 15,
+#             # breaks = c(0.0, 0.2,0.4,0.6, 0.8, 1.0, 1.2, 1.4,1.6, 1.8,2.0,2.2,2.4,2.6,2.8,3.0),
+#             dependent_label="Mechanism")
+# 
+# cowplot::save_plot("output/plot_cretes_mec.pdf", plot_mec,base_height=5,base_width=14)
+# 
+# 
+# 
+# 
+# table_data_laus_me <- data_laus %>%
+#   finalfit(dependent, explanatory,glmfit = Mod_laus_me) 
+# 
+# 
+# write.xlsx(table_data_laus_me ,paste0("output/table_data_laus_cretes_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
+# 
+# 
+# 
+# table_data_basel_me <- data_basel %>%
+#   finalfit(dependent, explanatory,glmfit = Mod_basel_me) 
+# 
+# 
+# write.xlsx(table_data_basel_me ,paste0("output/table_data_basel_cretes_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
 
 # Dauer der Ausbreitung Duree_2me_periode_z
 

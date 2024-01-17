@@ -62,12 +62,13 @@ data_basel <- data_com %>%
 explanatory = c( "sex","parity","Position_normal","age_mother","height10","birthweight100",
                  "GA_weeks","head_ConjExt")
 
-data_com_reduced <-  data_com %>%
-  select('Bassin_Cretes', 'height','birthweight','head_ConjExt', "head_circ", "Bassin_ConjExt") %>%
-  mutate(head_ConjExt= as.numeric(head_ConjExt))
 
-
-cor_mat <- round(cor(data_com_reduced, use="pairwise.complete.obs"), 2)
+# data_com_reduced <-  data_com %>%
+#   select('Bassin_Cretes', 'height','birthweight','head_ConjExt', "head_circ", "Bassin_ConjExt") %>%
+#   mutate(head_ConjExt= as.numeric(head_ConjExt))
+# 
+# 
+# cor_mat <- round(cor(data_com_reduced, use="pairwise.complete.obs"), 2)
 
 # Episiotomy
 
@@ -129,9 +130,9 @@ plot_mec <- data_com %>%
   or_plot_mec(dependent,explanatory, glmfit = Mod_laus_me,glmfit2 = Mod_basel_me,
             title_text_size = 15,
             # breaks = c(0.0, 0.2,0.4,0.6, 0.8, 1.0, 1.2, 1.4,1.6, 1.8,2.0,2.2,2.4,2.6,2.8,3.0),
-            dependent_label="Mechanism")
+            dependent_label="Forceps/CS")
 
-cowplot::save_plot("output/plot_height_mec.pdf", plot_mec,base_height=5,base_width=14)
+cowplot::save_plot("output/plot_mec.pdf", plot_mec,base_height=5,base_width=14)
 
 
 
@@ -140,7 +141,7 @@ table_data_laus_me <- data_laus %>%
   finalfit(dependent, explanatory,glmfit = Mod_laus_me) 
 
 
-write.xlsx(table_data_laus_me ,paste0("output/table_data_laus_height_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
+write.xlsx(table_data_laus_me ,paste0("output/table_data_laus_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
 
 
 
@@ -148,7 +149,7 @@ table_data_basel_me <- data_basel %>%
   finalfit(dependent, explanatory,glmfit = Mod_basel_me) 
 
 
-write.xlsx(table_data_basel_me ,paste0("output/table_data_basel_height_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
+write.xlsx(table_data_basel_me ,paste0("output/table_data_basel_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
 
 # Dauer der Ausbreitung Duree_2me_periode_z
 

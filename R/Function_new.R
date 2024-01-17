@@ -104,7 +104,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
   df.out$OR_plot=paste0(substr(df.out$`OR (multivariable)`,1,15),")")
   df.out <- df.out %>%
     mutate(OR_plot=recode(OR_plot, "-)" = "-"),
-           label=recode(label,"Position_normal" = "Position",
+           label=recode(label,"Position_normal" = "Child position",
                         "sex" ="Sex",
                         "parity" ="Parity",
                         "age_mother" ="Age of the mother",
@@ -118,7 +118,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
                         "Bassin_Cretes" = "Bassin Cretes in cm",
                         "birthweight100" = "Birthweight in 100gr",
                         "height10" = "Maternal height in 10cm",
-                        "head_ConjExt" = "Bassin ConjExt-head circ."
+                        "head_ConjExt" = "Conjug. Ext. vs Head circum."
                         # "head_circ" = "Head circumference in cm"
                         )) %>%
            # fit_id= factor(fit_id, levels = c("sexmale","sexfmale","age_mother","parity",
@@ -128,7 +128,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
            #                                 "head_Bassin_ConjExt_quan2Q","head_Bassin_ConjExt_quan3Q","head_Bassin_ConjExt_quan4Q",
            #                                 "head_Bassin_ConjExt_quan5Q"))) %>%
     select(fit_id, label, levels, Total,City, OR_plot, OR, L95, U95)     %>%
-    add_row(fit_id=NA, label="Explonatory", levels ="Faktor", Total=NA, City="Lausanne", OR_plot="Lausanne", OR=NA,L95=NA, U95=NA )
+    add_row(fit_id=NA, label="Explanatory variable", levels ="Factor", Total=NA, City="Lausanne", OR_plot="Lausanne", OR=NA,L95=NA, U95=NA )
   
 
   df.out2$levels = as.character(df.out2$levels)
@@ -137,7 +137,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
   df.out2$OR_plot=paste0(substr(df.out2$`OR (multivariable)`,1,15),")")
   df.out2 <- df.out2 %>%
     mutate(OR_plot=recode(OR_plot, "-)" = "-"),
-           label=recode(label,"Position_normal" = "Position",
+           label=recode(label,"Position_normal" = "Child position",
                         "sex" ="Sex",
                         "parity" ="Parity",
                         "age_mother" ="Age of the mother",
@@ -151,7 +151,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
                         "Bassin_Cretes" = "Bassin Cretes in cm",
                         "birthweight100" = "Birthweight in 100gr",
                         "height10" = "Maternal height in 10cm",
-                        "head_ConjExt" = "head circ.-Bassin ConjExt"
+                        "head_ConjExt" = "Conjug. Ext. vs Head circum."
                         # "head_circ" = "Head circumference in cm"
            )) %>%
     # fit_id= factor(fit_id, levels = c("sexmale","sexfmale","age_mother","parity",
@@ -161,7 +161,7 @@ or_plot_2 <- function (.data, dependent, explanatory, random_effect = NULL,
     #                                 "head_Bassin_ConjExt_quan2Q","head_Bassin_ConjExt_quan3Q","head_Bassin_ConjExt_quan4Q",
     #                                 "head_Bassin_ConjExt_quan5Q"))) %>%
    select(fit_id, label, levels, Total,City, OR_plot, OR, L95, U95)     %>%
-    add_row(fit_id=NA, label="Explonatory", levels ="Faktor", Total=NA, City="Basel", OR_plot="Basel", OR=NA,L95=NA, U95=NA )
+    add_row(fit_id=NA, label="Explanatory variable", levels ="Factor", Total=NA, City="Basel", OR_plot="Basel", OR=NA,L95=NA, U95=NA )
   
   
   

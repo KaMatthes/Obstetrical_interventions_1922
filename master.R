@@ -11,7 +11,7 @@ library(ggplot2)
 library(cowplot)
 library(finalfit)
 library(scales)
-library("DescTools")
+library(DescTools)
 
 conflict_prefer("select", "dplyr")
 conflict_prefer("mutate", "dplyr")
