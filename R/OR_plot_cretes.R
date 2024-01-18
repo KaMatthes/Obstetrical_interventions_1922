@@ -1,5 +1,5 @@
-source("R/function_new.R")
-source("R/function_new_lm.R")
+source("R/function_or.R")
+source("R/function_lm.R")
 
 data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
   mutate(Mecanisme_normal=ifelse(Mecanisme_normal==0,1,0),
