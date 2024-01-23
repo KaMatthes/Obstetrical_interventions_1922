@@ -47,11 +47,14 @@ data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
                               "1" = "healthy",
                               "2" = "medium",
                               "3" = "unhealthy"),
-         Etat.general = factor(Etat.general, levels=c("healthy", "medium", "unhealthy"))) %>%
+         Etat.general = factor(Etat.general, levels=c("healthy", "medium", "unhealthy")),
+         Maternal.body=case_when(Obesite==1 ~ "obese",
+                                 Maigre==1 ~ "thin",
+                                 Obesite==0 &  Maigre==0 ~ "normal"),
+         Maternal.body  = factor( Maternal.body , levels = c("normal","thin","obese"))) %>%
   group_by(City) %>%
   mutate(Duree_2me_periode_z = (Duree_2me_periode-mean(Duree_2me_periode,na.rm = TRUE))/sd(Duree_2me_periode,na.rm = TRUE)) %>%
   ungroup()
-
 
 data_laus <- data_com %>%
   filter(City=="Lausanne") 
@@ -73,12 +76,12 @@ data_basel <- data_com %>%
 
 #table
 
-explanatory = c( "SEP_comb_3a","Etat.general","sex","parity","Position_normal","age_mother","height10","birthweight100",
+explanatory = c( "SEP_comb_3a","Maternal.body","sex","parity","Position_normal","age_mother","height10","birthweight100",
                  "GA_weeks","head_ConjExt")
 
 dependent = "Episiotomy"
 
-Mod_laus_ep <- glm(Episiotomy ~  Etat.general+sex + parity + Position_normal + age_mother + height10+birthweight100+ 
+Mod_laus_ep <- glm(Episiotomy ~  Maternal.body+sex + parity + Position_normal + age_mother + height10+birthweight100+ 
                      GA_weeks +  head_ConjExt,
                    data = data_laus, family="binomial")
 
@@ -92,13 +95,13 @@ plot_epi <- data_com %>%
             # breaks = c(0.0, 0.2,0.4,0.6, 0.8, 1.0, 1.2, 1.4,1.6, 1.8,2.0,2.2,2.4,2.6,2.8,3.0),
             dependent_label="Episiotomy")
 
-cowplot::save_plot("output/plot_add_epi.pdf", plot_epi,base_height=7,base_width=14)
+cowplot::save_plot("output/plot_body_epi.pdf", plot_epi,base_height=7,base_width=14)
 
 table_data_laus_ep <- data_laus %>%
   finalfit(dependent, explanatory[-1],glmfit = Mod_laus_ep) 
 
 
-write.xlsx(table_data_laus_ep ,paste0("output/table_data_laus_add_ep.xlsx"), rowNames=FALSE, overwrite = TRUE)
+write.xlsx(table_data_laus_ep ,paste0("output/table_data_laus_body_ep.xlsx"), rowNames=FALSE, overwrite = TRUE)
 
 
 
@@ -106,17 +109,17 @@ table_data_basel_ep <- data_basel %>%
   finalfit(dependent, explanatory[-2],glmfit = Mod_basel_ep) 
 
 
-write.xlsx(table_data_basel_ep ,paste0("output/table_data_basel_add_ep.xlsx"), rowNames=FALSE, overwrite = TRUE)
+write.xlsx(table_data_basel_ep ,paste0("output/table_data_basel_body_ep.xlsx"), rowNames=FALSE, overwrite = TRUE)
 
 ### Mecanisme_normal, 1 = nicht normal, 0 = normal Mecanisme_normal 
 
 
-explanatory = c("SEP_comb_3a","Etat.general", "sex","parity","Position_normal","age_mother",
+explanatory = c("SEP_comb_3a","Maternal.body", "sex","parity","Position_normal","age_mother",
                  "GA_weeks", "head_circ", "Bassin_ConjExt")
 
 dependent = "Mecanisme_normal"
 
-Mod_laus_me <- glm(Mecanisme_normal  ~ Etat.general + sex + parity + Position_normal + age_mother + 
+Mod_laus_me <- glm(Mecanisme_normal  ~ Maternal.body + sex + parity + Position_normal + age_mother + 
                      GA_weeks +  head_circ + Bassin_ConjExt,
                    data = data_laus, family="binomial")
 
@@ -131,7 +134,7 @@ plot_mec <- data_com %>%
             # breaks = c(0.0, 0.2,0.4,0.6, 0.8, 1.0, 1.2, 1.4,1.6, 1.8,2.0,2.2,2.4,2.6,2.8,3.0),
             dependent_label="Forceps/CS")
 
-cowplot::save_plot("output/plot_mec_add.pdf", plot_mec,base_height=7,base_width=14)
+cowplot::save_plot("output/plot_mec_body.pdf", plot_mec,base_height=7,base_width=14)
 
 
 
@@ -140,7 +143,7 @@ table_data_laus_me <- data_laus %>%
   finalfit(dependent, explanatory[-1],glmfit = Mod_laus_me) 
 
 
-write.xlsx(table_data_laus_me ,paste0("output/table_data_laus_add_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
+write.xlsx(table_data_laus_me ,paste0("output/table_data_laus_body_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
 
 
 
@@ -148,18 +151,18 @@ table_data_basel_me <- data_basel %>%
   finalfit(dependent, explanatory[-2],glmfit = Mod_basel_me) 
 
 
-write.xlsx(table_data_basel_me ,paste0("output/table_data_basel_add_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
+write.xlsx(table_data_basel_me ,paste0("output/table_data_basel_body_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
 
 # Dauer der Ausbreitung Duree_2me_periode_z
 
 
-explanatory = c( "SEP_comb_3a","Etat.general","sex","parity","Position_normal","age_mother","height10","birthweight100",
+explanatory = c( "SEP_comb_3a","Maternal.body","sex","parity","Position_normal","age_mother","height10","birthweight100",
                  "GA_weeks","head_ConjExt")
 
 
 dependent = "Duree_2me_periode_z"
 
-Mod_laus_or <- glm(Duree_2me_periode_z  ~  Etat.general +sex + parity + Position_normal + age_mother + height10+birthweight100+ 
+Mod_laus_or <- glm(Duree_2me_periode_z  ~  Maternal.body +sex + parity + Position_normal + age_mother + height10+birthweight100+ 
                      GA_weeks +   head_ConjExt,
                    data = data_laus)
 
@@ -173,7 +176,7 @@ plot_du <- data_com %>%
             title_text_size = 15,
             dependent_label="Expulsion phase in z-values")
 
-cowplot::save_plot("output/plot_add_du.pdf", plot_du,base_height=7,base_width=14)
+cowplot::save_plot("output/plot_body_du.pdf", plot_du,base_height=7,base_width=14)
 
 
 
@@ -181,7 +184,7 @@ table_data_laus_du <- data_laus %>%
   finalfit(dependent, explanatory[-1],glmfit = Mod_laus_me) 
 
 
-write.xlsx(table_data_laus_du ,paste0("output/table_data_laus_add_du.xlsx"), rowNames=FALSE, overwrite = TRUE)
+write.xlsx(table_data_laus_du ,paste0("output/table_data_laus_body_du.xlsx"), rowNames=FALSE, overwrite = TRUE)
 
 
 
@@ -189,6 +192,6 @@ table_data_basel_du <- data_basel %>%
   finalfit(dependent, explanatory[-2],glmfit = Mod_basel_me) 
 
 
-write.xlsx(table_data_basel_du ,paste0("output/table_data_basel_add_du.xlsx"), rowNames=FALSE, overwrite = TRUE)
+write.xlsx(table_data_basel_du ,paste0("output/table_data_basel_body_du.xlsx"), rowNames=FALSE, overwrite = TRUE)
 
 
