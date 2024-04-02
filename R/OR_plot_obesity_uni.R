@@ -1,6 +1,6 @@
-source("R/function_or_uni.R")
-source("R/function_lm_uni.R")
-source("R/function_mech_uni.R")
+source("R/function_or_body.R")
+source("R/function_lm_body.R")
+source("R/function_mech_body.R")
 
 data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
   mutate(
@@ -87,7 +87,7 @@ Mod_basel_ep <- glm(Episiotomy ~  SEP_comb_3a ,
                     data = data_basel, family="binomial")
 
 plot_epi <- data_com %>%
-  or_plot_2_uni(dependent,explanatory, glmfit = Mod_laus_ep,glmfit2 = Mod_basel_ep,
+  or_plot_body(dependent,explanatory, glmfit = Mod_laus_ep,glmfit2 = Mod_basel_ep,
             title_text_size = 15,
             # breaks = c(0.0, 0.2,0.4,0.6, 0.8, 1.0, 1.2, 1.4,1.6, 1.8,2.0,2.2,2.4,2.6,2.8,3.0),
             dependent_label="Episiotomy")
@@ -123,7 +123,7 @@ Mod_basel_me <- glm(Mecanisme_normal  ~   SEP_comb_3a ,
                     data = data_basel, family="binomial")
 
 plot_mec <- data_com %>%
-  or_plot_mec_uni(dependent,explanatory, glmfit = Mod_laus_me,glmfit2 = Mod_basel_me,
+  or_plot_mec_body(dependent,explanatory, glmfit = Mod_laus_me,glmfit2 = Mod_basel_me,
             title_text_size = 15,
             # breaks = c(0.0, 0.2,0.4,0.6, 0.8, 1.0, 1.2, 1.4,1.6, 1.8,2.0,2.2,2.4,2.6,2.8,3.0),
             dependent_label="Forceps/CS")
@@ -163,7 +163,7 @@ Mod_basel_or <- glm(Duree_2me_periode_z  ~   SEP_comb_3a ,
                     data = data_basel)
 
 plot_du <- data_com %>%
-  or_plot_2_lm_uni(dependent,explanatory, glmfit = Mod_laus_or,glmfit2 = Mod_basel_or,
+  or_plot_lm_body(dependent,explanatory, glmfit = Mod_laus_or,glmfit2 = Mod_basel_or,
             title_text_size = 15,
             dependent_label="Expulsion phase in z-values")
 

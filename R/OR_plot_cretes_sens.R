@@ -33,6 +33,8 @@ data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
           Bassin_ConjExt_terc==3 & head_terc==2 ~"normal"),
           head_ConjExt  = factor( head_ConjExt , levels = c("normal","large-small","small-large")),
 
+         dura_terc = cut(Duree_2me_periode, breaks=c(quantile(Duree_2me_periode, c(0:3/3), na.rm = TRUE)),
+                         labels=c("1st tercile","2nd tercile","3rd tercile"), include.lowest=TRUE),
          # height_weight = height/birthweight,
          # height_weight_quan = cut(height_weight, breaks=c(quantile(height_weight, probs = c(seq(0,1, by=0.25)), na.rm = TRUE)), 
          #                          labels=c("1Q","2Q","3Q","4Q"), include.lowest=TRUE),
@@ -59,9 +61,8 @@ data_laus <- data_com %>%
 data_basel <- data_com %>%
   filter(City=="Basel") 
 
-
-explanatory = c( "sex","Position_normal","age_mother","Bassin_Cretes","birthweight100",
-                 "GA_weeks","head_ConjExt")
+explanatory = c( "sex","Position_normal","Bassin_Cretes","birthweight100",
+                 "GA_weeks","head_ConjExt", "dura_terc")
 
 # data_com_reduced <-  data_com %>%
 #   select('Bassin_Cretes', 'height','birthweight','head_ConjExt') %>%
@@ -77,12 +78,12 @@ explanatory = c( "sex","Position_normal","age_mother","Bassin_Cretes","birthweig
 
 dependent = "Episiotomy"
 
-Mod_laus_ep <- glm(Episiotomy ~  sex + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
-                     GA_weeks +  head_ConjExt,
+Mod_laus_ep <- glm(Episiotomy ~  sex + Position_normal + Bassin_Cretes+birthweight100+ 
+                     GA_weeks +  head_ConjExt +dura_terc,
                    data = data_laus, family="binomial")
 
-Mod_basel_ep <- glm(Episiotomy ~  sex + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
-                    GA_weeks +   head_ConjExt,
+Mod_basel_ep <- glm(Episiotomy ~  sex + Position_normal + Bassin_Cretes+birthweight100+ 
+                      GA_weeks +  head_ConjExt +dura_terc,
                     data = data_basel, family="binomial")
 
 plot_epi <- data_com %>%
@@ -149,14 +150,17 @@ write.xlsx(table_data_basel_ep ,paste0("output/table_data_basel_cretes_ep_sens.x
 
 # Dauer der Ausbreitung Duree_2me_periode_z
 
+explanatory = c( "sex","Position_normal","Bassin_Cretes","birthweight100",
+                 "GA_weeks","head_ConjExt")
+
 dependent = "Duree_2me_periode_z"
 
-Mod_laus_or <- glm(Duree_2me_periode_z  ~  sex + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
+Mod_laus_or <- glm(Duree_2me_periode_z  ~  sex + Position_normal  +  Bassin_Cretes+birthweight100+ 
                      GA_weeks +   head_ConjExt,
                    data = data_laus)
 
 
-Mod_basel_or <- glm(Duree_2me_periode_z  ~   sex  + Position_normal + age_mother +  Bassin_Cretes+birthweight100+ 
+Mod_basel_or <- glm(Duree_2me_periode_z  ~   sex  + Position_normal +  Bassin_Cretes+birthweight100+ 
                       GA_weeks +   head_ConjExt,
                     data = data_basel)
 

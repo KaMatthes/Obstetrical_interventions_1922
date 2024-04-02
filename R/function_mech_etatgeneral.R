@@ -1,4 +1,4 @@
-or_plot_2_sens <- function (.data, dependent, explanatory, random_effect = NULL, 
+or_plot_mec_etat <- function (.data, dependent, explanatory, random_effect = NULL, 
           factorlist = NULL, glmfit = NULL, glmfit2=NULL,confint_type = NULL, remove_ref = FALSE, 
           breaks = NULL, column_space = c(-0.1, 0, 0.05,0.1), dependent_label = NULL, 
           prefix = "", suffix = ": OR (95% CI)", 
@@ -106,10 +106,13 @@ or_plot_2_sens <- function (.data, dependent, explanatory, random_effect = NULL,
     mutate(OR_plot=recode(OR_plot, "-)" = "-"),
            label=recode(label,"Position_normal" = "Child position",
                         "sex" ="Sex",
+                        "SEP_comb_3a" ="Socioeconomic position",
+                        "Etat.general" = "Health status",
+                        "Maternal.body" = "Maternal body",
                         "parity" ="Parity",
                         "age_mother" ="Maternal age (years)",
                         "GA_weeks" = "Gestational age (w)",
-                        # "Bassin_ConjExt" = "Bassin ConjExt",
+                        "Bassin_ConjExt" = "Conjugata Externa in cm",
                         # "Bassin_Epines" = "Bassin Epines",
                         # "height_cretes" = "Ratio height/Bassin Cretes",
                         # "height_cretes_quan" = "Ratio height/Bassin Cretes Q",
@@ -119,9 +122,11 @@ or_plot_2_sens <- function (.data, dependent, explanatory, random_effect = NULL,
                         "birthweight100" = "Birthweight in 100gr",
                         "height10" = "Maternal height in 10cm",
                         "head_ConjExt" = "Conjug. Ext. vs Head circum.",
-                        "dura_terc" = "Expulsion phase"
-                        # "head_circ" = "Head circumference in cm"
-                        )) %>%
+                        "dura_terc" = "Expulsion phase",
+                        "head_circ" = "Head circumference in cm"),
+    levels=ifelse((label=="Parity" | label=="Maternal age (years)"
+                   | label=="Gestational age (w)"  | label=="Conjugata Externa in cm" 
+                   | label=="Head circumference in cm"),"-",levels)) %>%
            # fit_id= factor(fit_id, levels = c("sexmale","sexfmale","age_mother","parity",
            #                                 "birthweight100", "GA_weeks","Position_normalnormal","Position_normalnonnormal",
            #                                 "Bassin_Epines","height_cretes_quan1Q","height_cretes_quan2Q","height_cretes_quan3Q",
@@ -140,10 +145,13 @@ or_plot_2_sens <- function (.data, dependent, explanatory, random_effect = NULL,
     mutate(OR_plot=recode(OR_plot, "-)" = "-"),
            label=recode(label,"Position_normal" = "Child position",
                         "sex" ="Sex",
+                        "SEP_comb_3a" ="Socioeconomic position",
+                        "Etat.general" = "Health status",
+                        "Maternal.body" = "Maternal body",
                         "parity" ="Parity",
                         "age_mother" ="Maternal age (years)",
                         "GA_weeks" = "Gestational age (w)",
-                        # "Bassin_ConjExt" = "Bassin ConjExt",
+                        "Bassin_ConjExt" = "Conjugata Externa in cm",
                         # "Bassin_Epines" = "Bassin Epines",
                         # "height_cretes" = "Ratio height/Bassin Cretes",
                         # "height_cretes_quan" = "Ratio height/Bassin Cretes Q",
@@ -153,9 +161,11 @@ or_plot_2_sens <- function (.data, dependent, explanatory, random_effect = NULL,
                         "birthweight100" = "Birthweight in 100gr",
                         "height10" = "Maternal height in 10cm",
                         "head_ConjExt" = "Conjug. Ext. vs Head circum.",
-                        "dura_terc" = "Expulsion phase"
-                        # "head_circ" = "Head circumference in cm"
-           )) %>%
+                        "dura_terc" = "Expulsion phase",
+                        "head_circ" = "Head circumference in cm"),
+                        levels=ifelse((label=="Parity" | label=="Maternal age (years)"
+                                       | label=="Gestational age (w)"  | label=="Conjugata Externa in cm" 
+                                       | label=="Head circumference in cm"),"-",levels)) %>%
     # fit_id= factor(fit_id, levels = c("sexmale","sexfmale","age_mother","parity",
     #                                 "birthweight100", "GA_weeks","Position_normalnormal","Position_normalnonnormal",
     #                                 "Bassin_Epines","height_cretes_quan1Q","height_cretes_quan2Q","height_cretes_quan3Q",
@@ -206,19 +216,19 @@ or_plot_2_sens <- function (.data, dependent, explanatory, random_effect = NULL,
           axis.text.y = element_blank(), 
           axis.line.y = element_blank(), 
           axis.ticks.y = element_blank(), 
-          legend.position = c(0.9,0.9),
+          legend.position = c(0.8,0.9),
           legend.text =element_text(size=15))
   
   
   t1 = ggplot(df.out, aes(x = as.numeric(OR), y = fit_id)) + 
     annotate("text", x = column_space[1], y = df.out$fit_id, 
-             label = df.out[, 2], hjust = 0, size = c(rep(4,13), 5)) + 
+             label = df.out[, 2], hjust = 0, size = c(rep(4,14), 5)) + 
     annotate("text", x = column_space[2], y = df.out$fit_id,
-             label = df.out[, 3], hjust = 1, size = c(rep(4,13), 5)) +
+             label = df.out[, 3], hjust = 1, size = c(rep(4,14), 5)) +
     annotate("text", x = column_space[3], y = df.out$fit_id,
-             label = df.out[, 6], hjust = 1, size = c(rep(4,13),5)) +
+             label = df.out[, 6], hjust = 1, size = c(rep(4,14),5)) +
     annotate("text", x = column_space[4], y = df.out2$fit_id,
-             label = df.out2[, 6], hjust = 1, size = c(rep(4,13), 5)) +
+             label = df.out2[, 6], hjust = 1, size = c(rep(4,14), 5)) +
     theme_classic(11) + 
     theme(axis.title.x = element_text(colour = "white"), 
                               axis.text.x = element_text(colour = "white"), axis.title.y = element_blank(), 

@@ -32,6 +32,8 @@ data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
           Bassin_ConjExt_terc==2 & head_terc==3 ~"normal",
           Bassin_ConjExt_terc==3 & head_terc==2 ~"normal"),
           head_ConjExt  = factor( head_ConjExt , levels = c("normal","large-small","small-large")),
+         dura_terc = cut(Duree_2me_periode, breaks=c(quantile(Duree_2me_periode, c(0:3/3), na.rm = TRUE)),
+                         labels=c("1st tercile","2nd tercile","3rd tercile"), include.lowest=TRUE),
 
          # height_weight = height/birthweight,
          # height_weight_quan = cut(height_weight, breaks=c(quantile(height_weight, probs = c(seq(0,1, by=0.25)), na.rm = TRUE)), 
@@ -59,8 +61,8 @@ data_basel <- data_com %>%
   filter(City=="Basel") 
 
 
-explanatory = c( "sex","parity","Position_normal","age_mother","height10","birthweight100",
-                 "GA_weeks","head_ConjExt")
+explanatory = c( "sex","parity","Position_normal","height10","birthweight100",
+                 "GA_weeks","head_ConjExt", "dura_terc")
 
 
 # data_com_reduced <-  data_com %>%
@@ -77,12 +79,12 @@ explanatory = c( "sex","parity","Position_normal","age_mother","height10","birth
 
 dependent = "Episiotomy"
 
-Mod_laus_ep <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother + height10+birthweight100+ 
-                     GA_weeks +  head_ConjExt,
+Mod_laus_ep <- glm(Episiotomy ~  sex + parity + Position_normal + height10+birthweight100+ 
+                     GA_weeks +  head_ConjExt +dura_terc,
                    data = data_laus, family="binomial")
 
-Mod_basel_ep <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother + height10+birthweight100+ 
-                    GA_weeks +   head_ConjExt,
+Mod_basel_ep <- glm(Episiotomy ~  sex + parity + Position_normal + height10+birthweight100+ 
+                    GA_weeks +   head_ConjExt +dura_terc,
                     data = data_basel, family="binomial")
 
 plot_epi <- data_com %>%
@@ -112,17 +114,17 @@ write.xlsx(table_data_basel_ep ,paste0("output/table_data_basel_height_ep.xlsx")
 ### Mecanisme_normal, 1 = nicht normal, 0 = normal Mecanisme_normal 
 
 
-explanatory = c( "sex","parity","Position_normal","age_mother",
+explanatory = c( "sex","parity","Position_normal",
                  "GA_weeks", "head_circ", "Bassin_ConjExt")
 
 dependent = "Mecanisme_normal"
 
-Mod_laus_me <- glm(Mecanisme_normal  ~ sex + parity + Position_normal + age_mother + 
+Mod_laus_me <- glm(Mecanisme_normal  ~ sex + parity + Position_normal + 
                      GA_weeks +  head_circ + Bassin_ConjExt,
                    data = data_laus, family="binomial")
 
 
-Mod_basel_me <- glm(Mecanisme_normal  ~   sex + parity + Position_normal + age_mother+ 
+Mod_basel_me <- glm(Mecanisme_normal  ~   sex + parity + Position_normal + 
                       GA_weeks +  head_circ + Bassin_ConjExt,
                     data = data_basel, family="binomial")
 
@@ -154,18 +156,18 @@ write.xlsx(table_data_basel_me ,paste0("output/table_data_basel_me.xlsx"), rowNa
 # Dauer der Ausbreitung Duree_2me_periode_z
 
 
-explanatory = c( "sex","parity","Position_normal","age_mother","height10","birthweight100",
+explanatory = c( "sex","parity","Position_normal","height10","birthweight100",
                  "GA_weeks","head_ConjExt")
 
 
 dependent = "Duree_2me_periode_z"
 
-Mod_laus_or <- glm(Duree_2me_periode_z  ~  sex + parity + Position_normal + age_mother + height10+birthweight100+ 
+Mod_laus_or <- glm(Duree_2me_periode_z  ~  sex + parity + Position_normal+ height10+birthweight100+ 
                      GA_weeks +   head_ConjExt,
                    data = data_laus)
 
 
-Mod_basel_or <- glm(Duree_2me_periode_z  ~   sex + parity + Position_normal + age_mother + height10+birthweight100+ 
+Mod_basel_or <- glm(Duree_2me_periode_z  ~   sex + parity + Position_normal + height10+birthweight100+ 
                       GA_weeks +   head_ConjExt,
                     data = data_basel)
 

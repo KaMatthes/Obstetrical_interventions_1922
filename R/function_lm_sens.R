@@ -160,7 +160,8 @@ or_plot_2_lm_sens <- function (.data, dependent, explanatory, random_effect = NU
                    "Bassin_Cretes" = "Bassin Cretes in cm",
                    "birthweight100" = "Birthweight in 100gr",
                    "height10" = "Maternal height in 10cm",
-                   "head_ConjExt" = "Conjug. Ext. vs Head circum."
+                   "head_ConjExt" = "Conjug. Ext. vs Head circum.",
+                   "dura_terc" = "Expulsion phase"
                    # "head_circ" = "Head circumference in cm"
       ),
       levels=ifelse((label=="Parity" | label=="Maternal age (years)" |
@@ -221,13 +222,13 @@ or_plot_2_lm_sens <- function (.data, dependent, explanatory, random_effect = NU
   
   t1 = ggplot(df.out, aes(x = as.numeric(OR), y = fit_id)) + 
     annotate("text", x = column_space[1], y = df.out$fit_id, 
-             label = df.out[, 2], hjust = 0, size = c(rep(4,11), 5)) + 
+             label = df.out[, 2], hjust = 0, size = c(rep(4,10), 5)) + 
     annotate("text", x = column_space[2], y = df.out$fit_id,
-             label = df.out[, 3], hjust = 1, size = c(rep(4,11), 5)) +
+             label = df.out[, 3], hjust = 1, size = c(rep(4,10), 5)) +
     annotate("text", x = column_space[3], y = df.out$fit_id,
-             label = df.out[, 6], hjust = 1, size = c(rep(4,11),5)) +
+             label = df.out[, 6], hjust = 1, size = c(rep(4,10),5)) +
     annotate("text", x = column_space[4], y = df.out2$fit_id,
-             label = df.out2[, 6], hjust = 1, size = c(rep(4,11), 5)) +
+             label = df.out2[, 6], hjust = 1, size = c(rep(4,10), 5)) +
     theme_classic(11) + 
     theme(axis.title.x = element_text(colour = "white"), 
                               axis.text.x = element_text(colour = "white"), axis.title.y = element_blank(), 
@@ -241,3 +242,4 @@ or_plot_2_lm_sens <- function (.data, dependent, explanatory, random_effect = NU
                           top = grid::textGrob(title, x = 0.02, y = 0.2, gp = grid::gpar(fontsize = title_text_size), 
                                                just = "left"))
 }
+
