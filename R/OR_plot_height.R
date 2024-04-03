@@ -193,27 +193,3 @@ table_data_basel_du <- data_basel %>%
 
 
 write.xlsx(table_data_basel_du ,paste0("output/table_data_basel_height_du.xlsx"), rowNames=FALSE, overwrite = TRUE)
-
-# Stillbirth
-# 
-# explanatory = c( "sex","Position_normal","Episiotomy", "Mecanisme_normal")
-# 
-# 
-# dependent = "stillbirth"
-# 
-# Mod_laus_still <- glm(stillbirth ~  Position_normal,
-#                    data = data_laus, family="binomial")
-# 
-# 
-# Mod_basel_or <- glm(Episiotomy ~  sex + parity + Position_normal + age_mother + height_weight_quan+ head_Bassin_ConjExt_quan
-#                     + GA_weeks + height_cretes_quan,
-#                     data = data_basel, family="binomial")
-# 
-# plot_epi <- data_com %>%
-#   or_plot_2(dependent,explanatory, glmfit = Mod_laus_or,glmfit2 = Mod_basel_or,
-#             title_text_size = 15,
-#             breaks = c(0.0, 0.2,0.4,0.6, 0.8, 1.0, 1.2, 1.4,1.6, 1.8,2.0,2.2,2.4,2.6,2.8,3.0))
-# 
-# cowplot::save_plot("output/plot_epi.pdf", plot_epi,base_height=7,base_width=14)
-# 
-# 
