@@ -27,12 +27,6 @@ conflict_prefer("rbind.fill", "plyr")
 conflict_prefer("group_by", "dplyr")
 
 
-### Research questions from the paper:
-# What was the relationship between maternal skeletal dimensions (pelvis, height) and infant body dimensions (head circumference, birth weight) among expectant mothers in two Swiss cities in the early 1920s? 
-# What was the role of maternal malnutrition such as rickets or iodine deficiency? 
-# How common were obstetric interventions such as caesarean section, episiotomy, forceps delivery and extraction? 
-# Was the imbalance between the mother's and child's body size a relevant risk factor for such interventions, as well as for the duration of labour?
-
 
 mypalette <-pal_jco()(10)
 
