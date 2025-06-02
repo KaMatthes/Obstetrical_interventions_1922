@@ -4,16 +4,16 @@ source("R/functions/function_lm.R")
 # load data
 data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
   mutate(
-    position_normal=ifelse(position_normal==0,1,0),
     position_normal= as.factor(position_normal),
+    position_normal = recode(position_normal,"0"="normal",
+                             "1" = "non-normal"),
     episiotomy = as.factor(episiotomy),
     sex= as.factor(sex),
     stillbirth= as.factor(stillbirth),
     # sex=recode(sex, 
     #            "0" = "male",
     #            "1" ="female" ),
-    position_normal = recode(position_normal,"0"="normal",
-                             "1" = "non-normal"),
+  
     birthweight100 = birthweight/100,
     height10 = height/10,
     bassin_cretes10= bassin_cretes/10,
