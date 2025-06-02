@@ -56,7 +56,7 @@ data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
                                "1" = "yes",
                                "0" = "no")) %>%
   group_by(city) %>%
-  mutate(explusion_z = (explusion-mean(explusion,na.rm = TRUE))/sd(explusion,na.rm = TRUE)) %>%
+  mutate(expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)) %>%
   ungroup()
 
 data_laus <- data_com %>%
@@ -108,13 +108,13 @@ ggsave("output/ForcepsCS/OR_forc_sr.png",  plot_forc,h=5,w=14)
 ### Expulsion time ### 
 
 explanatory = c( "sep","rickets")
-dependent = "explusion_z"
+dependent = "expulsion_z"
 
-Mod_laus_or <- glm(explusion_z  ~  rickets,
+Mod_laus_or <- glm(expulsion_z  ~  rickets,
                    data = data_laus)
 
 
-Mod_basel_or <- glm(explusion_z  ~   sep ,
+Mod_basel_or <- glm(expulsion_z  ~   sep ,
                     data = data_basel)
 
 plot_du <- data_com %>%

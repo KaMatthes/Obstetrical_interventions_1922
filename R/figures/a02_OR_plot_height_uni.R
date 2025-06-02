@@ -31,11 +31,11 @@ data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
           bassin_conjExt_terc==2 & head_terc==3 ~"normal",
           bassin_conjExt_terc==3 & head_terc==2 ~"normal"),
           head_ConjExt  = factor( head_ConjExt , levels = c("normal","large-small","small-large")),
-         dura_terc = cut(explusion, breaks=c(quantile(explusion, c(0:3/3), na.rm = TRUE)),
+         dura_terc = cut(expulsion, breaks=c(quantile(expulsion, c(0:3/3), na.rm = TRUE)),
                          labels=c("1st tercile","2nd tercile","3rd tercile"), include.lowest=TRUE),
          sex = factor( sex, levels = c("male", "female"))) %>%
   group_by(city) %>%
-  mutate(explusion_z = (explusion-mean(explusion,na.rm = TRUE))/sd(explusion,na.rm = TRUE)) %>%
+  mutate(expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)) %>%
   ungroup()
 
 
@@ -122,19 +122,19 @@ table_data_basel_me <- data_basel %>%
 
 write.xlsx(table_data_basel_me ,paste0("output/table_data_basel_uni_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
 
-# Dauer der Ausbreitung explusion_z
+# Dauer der Ausbreitung expulsion_z
 
 
 explanatory = c( "head_ConjExt")
 
 
-dependent = "explusion_z"
+dependent = "expulsion_z"
 
-Mod_laus_or <- glm(explusion_z  ~   head_ConjExt,
+Mod_laus_or <- glm(expulsion_z  ~   head_ConjExt,
                    data = data_laus)
 
 
-Mod_basel_or <- glm(explusion_z  ~     head_ConjExt,
+Mod_basel_or <- glm(expulsion_z  ~     head_ConjExt,
                     data = data_basel)
 
 plot_du <- data_com %>%

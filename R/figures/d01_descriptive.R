@@ -28,15 +28,15 @@ data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
       bassin_conjExt_terc==2 & head_terc==3 ~"normal",
       bassin_conjExt_terc==3 & head_terc==2 ~"normal"),
     head_ConjExt  = factor( head_ConjExt , levels = c("normal","large-small","small-large")),
-    dura_terc = cut(explusion, breaks=c(quantile(explusion, c(0:3/3), na.rm = TRUE)),
+    dura_terc = cut(expulsion, breaks=c(quantile(expulsion, c(0:3/3), na.rm = TRUE)),
                     labels=c("1st tercile","2nd tercile","3rd tercile"), include.lowest=TRUE),
     sex = factor( sex, levels = c("male", "female"))) %>%
   group_by(city) %>%
-  mutate(explusion_z = (explusion-mean(explusion,na.rm = TRUE))/sd(explusion,na.rm = TRUE)) %>%
+  mutate(expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)) %>%
   ungroup()
 
 dt <- data_com %>%
-  select(stillbirth,episiotomy,mecanisme_normal,explusion_z,city) %>%
+  select(stillbirth,episiotomy,mecanisme_normal,expulsion_z,city) %>%
   mutate(mecanisme_normal = as.factor(mecanisme_normal))
   
 

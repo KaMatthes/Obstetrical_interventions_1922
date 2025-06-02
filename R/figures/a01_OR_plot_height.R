@@ -4,16 +4,16 @@ source("R/functions/function_lm.R")
 # load data
 data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
   mutate(
-         position_normal=ifelse(position_normal==0,1,0),
+         # position_normal=ifelse(position_normal==0,1,0),
          position_normal= as.factor(position_normal),
+         position_normal = recode(position_normal,"0"="normal",
+                                  "1" = "non-normal"),
          episiotomy = as.factor(episiotomy),
          sex= as.factor(sex),
          stillbirth= as.factor(stillbirth),
          # sex=recode(sex, 
          #            "0" = "male",
          #            "1" ="female" ),
-         position_normal = recode(position_normal,"0"="normal",
-                                  "1" = "non-normal"),
          birthweight100 = birthweight/100,
          height10 = height/10,
          bassin_cretes10= bassin_cretes/10,
@@ -32,11 +32,11 @@ data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
           bassin_conjExt_terc==2 & head_terc==3 ~"normal",
           bassin_conjExt_terc==3 & head_terc==2 ~"normal"),
           head_ConjExt  = factor( head_ConjExt , levels = c("normal","large-small","small-large")),
-         dura_terc = cut(explusion, breaks=c(quantile(explusion, c(0:3/3), na.rm = TRUE)),
+         dura_terc = cut(expulsion, breaks=c(quantile(expulsion, c(0:3/3), na.rm = TRUE)),
                          labels=c("1st tercile","2nd tercile","3rd tercile"), include.lowest=TRUE),
          sex = factor( sex, levels = c("male", "female"))) %>%
   group_by(city) %>%
-  mutate(explusion_z = (explusion-mean(explusion,na.rm = TRUE))/sd(explusion,na.rm = TRUE)) %>%
+  mutate(expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)) %>%
   ungroup()
 
 data_laus <- data_com %>%
@@ -106,12 +106,12 @@ write.xlsx(table_data_basel_me ,paste0("output/ForcepsCS/results_b_forc.xlsx"), 
 ### Expulsion time ### 
 
 explanatory = c( "sex","parity","position_normal","height10","birthweight100","head_ConjExt")
-dependent = "explusion_z"
+dependent = "expulsion_z"
 
-Mod_laus_or <- glm(explusion_z  ~  sex + parity + position_normal+ height10+birthweight100+   head_ConjExt,
+Mod_laus_or <- glm(expulsion_z  ~  sex + parity + position_normal+ height10+birthweight100+   head_ConjExt,
                    data = data_laus)
 
-Mod_basel_or <- glm(explusion_z  ~   sex + parity + position_normal + height10+birthweight100+   head_ConjExt,
+Mod_basel_or <- glm(expulsion_z  ~   sex + parity + position_normal + height10+birthweight100+   head_ConjExt,
                     data = data_basel)
 
 plot_du <- data_com %>%

@@ -47,10 +47,10 @@ data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
                               "2" = "medium",
                               "3" = "unhealthy"),
          health_status = factor(health_status, levels=c("healthy", "medium", "unhealthy")),
-         dura_terc = cut(explusion, breaks=c(quantile(explusion, c(0:3/3), na.rm = TRUE)),
+         dura_terc = cut(expulsion, breaks=c(quantile(expulsion, c(0:3/3), na.rm = TRUE)),
                          labels=c("1st tercile","2nd tercile","3rd tercile"), include.lowest=TRUE)) %>%
   group_by(city) %>%
-  mutate(explusion_z = (explusion-mean(explusion,na.rm = TRUE))/sd(explusion,na.rm = TRUE)) %>%
+  mutate(expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)) %>%
   ungroup()
 
 
@@ -151,21 +151,21 @@ table_data_basel_me <- data_basel %>%
 
 write.xlsx(table_data_basel_me ,paste0("output/table_data_basel_etatgeneral_me.xlsx"), rowNames=FALSE, overwrite = TRUE)
 
-# Dauer der Ausbreitung explusion_z
+# Dauer der Ausbreitung expulsion_z
 
 
 explanatory = c( "sep","health_status","sex","parity","position_normal","height10","birthweight100",
                  "GA_weeks","head_ConjExt")
 
 
-dependent = "explusion_z"
+dependent = "expulsion_z"
 
-Mod_laus_or <- glm(explusion_z  ~  health_status +sex + parity + position_normal  + height10+birthweight100+ 
+Mod_laus_or <- glm(expulsion_z  ~  health_status +sex + parity + position_normal  + height10+birthweight100+ 
                      GA_weeks +   head_ConjExt,
                    data = data_laus)
 
 
-Mod_basel_or <- glm(explusion_z  ~   sep + sex + parity + position_normal  + height10+birthweight100+ 
+Mod_basel_or <- glm(expulsion_z  ~   sep + sex + parity + position_normal  + height10+birthweight100+ 
                       GA_weeks +   head_ConjExt,
                     data = data_basel)
 

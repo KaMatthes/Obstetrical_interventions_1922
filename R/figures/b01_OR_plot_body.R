@@ -52,7 +52,7 @@ data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
                                  obesity==0 &  thin==0 ~ "normal"),
          Maternal.body  = factor( Maternal.body , levels = c("normal","thin","obese"))) %>%
   group_by(city) %>%
-  mutate(explusion_z = (explusion-mean(explusion,na.rm = TRUE))/sd(explusion,na.rm = TRUE)) %>%
+  mutate(expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)) %>%
   ungroup()
 
 data_laus <- data_com %>%
@@ -111,12 +111,12 @@ ggsave("output/ForcepsCS/OR_forc_sb.png",  plot_forc,h=5,w=14)
 explanatory = c( "sep","Maternal.body")
 
 
-dependent = "explusion_z"
+dependent = "expulsion_z"
 
-Mod_laus_or <- glm(explusion_z  ~  Maternal.body ,
+Mod_laus_or <- glm(expulsion_z  ~  Maternal.body ,
                    data = data_laus)
 
-Mod_basel_or <- glm(explusion_z  ~   sep ,
+Mod_basel_or <- glm(expulsion_z  ~   sep ,
                     data = data_basel)
 
 plot_du <- data_com %>%

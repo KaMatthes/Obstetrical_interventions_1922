@@ -31,11 +31,11 @@ data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
           bassin_conjExt_terc==2 & head_terc==3 ~"normal",
           bassin_conjExt_terc==3 & head_terc==2 ~"normal"),
           head_ConjExt  = factor( head_ConjExt , levels = c("normal","large-small","small-large")),
-         dura_terc = cut(explusion, breaks=c(quantile(explusion, c(0:3/3), na.rm = TRUE)),
+         dura_terc = cut(expulsion, breaks=c(quantile(expulsion, c(0:3/3), na.rm = TRUE)),
                          labels=c("1st tercile","2nd tercile","3rd tercile"), include.lowest=TRUE),
          sex = factor( sex, levels = c("male", "female"))) %>%
   group_by(city) %>%
-  mutate(explusion_z = (explusion-mean(explusion,na.rm = TRUE))/sd(explusion,na.rm = TRUE)) %>%
+  mutate(expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)) %>%
   ungroup() 
 
 
@@ -82,10 +82,10 @@ ggsave("output/ForcepsCS/OR_forc_ga.png",  plot_forc,h=5,w=14)
 ### Expulsion time ### 
 
 explanatory = c( "GA_weeks")
-dependent = "explusion_z"
+dependent = "expulsion_z"
 
-Mod_laus_or <- glm(explusion_z  ~    GA_weeks, data = data_laus)
-Mod_basel_or <- glm(explusion_z  ~      GA_weeks , data = data_basel)
+Mod_laus_or <- glm(expulsion_z  ~    GA_weeks, data = data_laus)
+Mod_basel_or <- glm(expulsion_z  ~      GA_weeks , data = data_basel)
 
 plot_du <- data_com %>%
   or_plot_2_lm(dependent,explanatory, glmfit = Mod_laus_or,glmfit2 = Mod_basel_or,
