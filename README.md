@@ -8,7 +8,7 @@ Nora Haag, Mathilde Le Vu, Adrian V Jaeggi, David Baud, David Desseauve,Martin H
 
 ## Data
 
-The data is public available via Zenodo:
+The data is public available via Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15576871.svg)](https://doi.org/10.5281/zenodo.15576871)
 <br >
 <br >
 
