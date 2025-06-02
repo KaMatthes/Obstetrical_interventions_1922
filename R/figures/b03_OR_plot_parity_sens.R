@@ -1,62 +1,62 @@
 source("R/functions/function_or.R")
 source("R/functions/function_lm.R")
 
-data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE)  %>%
+data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
   mutate(
-         Position_normal=ifelse(Position_normal==0,1,0),
-         Position_normal= as.factor(Position_normal),
-         Episiotomy = as.factor(Episiotomy),
+         position_normal=ifelse(position_normal==0,1,0),
+         position_normal= as.factor(position_normal),
+         episiotomy = as.factor(episiotomy),
          sex= as.factor(sex),
          stillbirth= as.factor(stillbirth),
          # sex=recode(sex, 
          #            "0" = "male",
          #            "1" ="female" ),
-         Position_normal = recode(Position_normal,"0"="normal",
+         position_normal = recode(position_normal,"0"="normal",
                                   "1" = "non-normal"),
          birthweight100 = birthweight/100,
          height10 = height/10,
-         Bassin_Cretes10= Bassin_Cretes/10,
+         bassin_cretes10= bassin_cretes/10,
          head_terc = cut(head_circ, breaks=c(quantile( head_circ, c(0:3/3), na.rm = TRUE)),
                          labels=c("1","2","3"), include.lowest=TRUE),
-         Bassin_ConjExt_terc = cut(Bassin_ConjExt, breaks=c(quantile( Bassin_ConjExt, c(0:3/3), na.rm = TRUE)),
+         bassin_conjExt_terc = cut(bassin_conjExt, breaks=c(quantile( bassin_conjExt, c(0:3/3), na.rm = TRUE)),
                          labels=c("1","2","3"), include.lowest=TRUE),
          head_ConjExt = case_when(
-          Bassin_ConjExt_terc==1 & head_terc==3 ~ "small-large",
-          Bassin_ConjExt_terc==3 & head_terc==1 ~"large-small",
-          Bassin_ConjExt_terc==1 & head_terc==1 ~"normal",
-          Bassin_ConjExt_terc==2 & head_terc==2 ~"normal",
-          Bassin_ConjExt_terc==3 & head_terc==3 ~"normal",
-          Bassin_ConjExt_terc==1 & head_terc==2 ~"normal",
-          Bassin_ConjExt_terc==2 & head_terc==1 ~"normal",
-          Bassin_ConjExt_terc==2 & head_terc==3 ~"normal",
-          Bassin_ConjExt_terc==3 & head_terc==2 ~"normal"),
+          bassin_conjExt_terc==1 & head_terc==3 ~ "small-large",
+          bassin_conjExt_terc==3 & head_terc==1 ~"large-small",
+          bassin_conjExt_terc==1 & head_terc==1 ~"normal",
+          bassin_conjExt_terc==2 & head_terc==2 ~"normal",
+          bassin_conjExt_terc==3 & head_terc==3 ~"normal",
+          bassin_conjExt_terc==1 & head_terc==2 ~"normal",
+          bassin_conjExt_terc==2 & head_terc==1 ~"normal",
+          bassin_conjExt_terc==2 & head_terc==3 ~"normal",
+          bassin_conjExt_terc==3 & head_terc==2 ~"normal"),
           head_ConjExt  = factor( head_ConjExt , levels = c("normal","large-small","small-large")),
-         dura_terc = cut(Duree_2me_periode, breaks=c(quantile(Duree_2me_periode, c(0:3/3), na.rm = TRUE)),
+         dura_terc = cut(explusion, breaks=c(quantile(explusion, c(0:3/3), na.rm = TRUE)),
                          labels=c("1st tercile","2nd tercile","3rd tercile"), include.lowest=TRUE),
 
          sex = factor( sex, levels = c("male", "female"))) %>%
-  group_by(City) %>%
-  mutate(Duree_2me_periode_z = (Duree_2me_periode-mean(Duree_2me_periode,na.rm = TRUE))/sd(Duree_2me_periode,na.rm = TRUE)) %>%
+  group_by(city) %>%
+  mutate(explusion_z = (explusion-mean(explusion,na.rm = TRUE))/sd(explusion,na.rm = TRUE)) %>%
   ungroup() %>%
   filter(parity==1)
 
 
 data_laus <- data_com %>%
-  filter(City=="Lausanne") 
+  filter(city=="Lausanne") 
 
 
 data_basel <- data_com %>%
-  filter(City=="Basel") 
+  filter(city=="Basel") 
 
 ### Episiotomy ###
 
-explanatory = c( "sex","Position_normal","height10","birthweight100","head_ConjExt", "dura_terc")
-dependent = "Episiotomy"
+explanatory = c( "sex","position_normal","height10","birthweight100","head_ConjExt", "dura_terc")
+dependent = "episiotomy"
 
-Mod_laus_ep <- glm(Episiotomy ~  sex  + Position_normal + height10+birthweight100+  head_ConjExt +dura_terc,
+Mod_laus_ep <- glm(episiotomy ~  sex  + position_normal + height10+birthweight100+  head_ConjExt +dura_terc,
                    data = data_laus, family="binomial")
 
-Mod_basel_ep <- glm(Episiotomy ~  sex + Position_normal + height10+birthweight100+   head_ConjExt +dura_terc,
+Mod_basel_ep <- glm(episiotomy ~  sex + position_normal + height10+birthweight100+   head_ConjExt +dura_terc,
                     data = data_basel, family="binomial")
 
 plot_epi <- data_com %>%
@@ -69,13 +69,13 @@ ggsave("output/Episiotomy/OR_epi_p1.png",  plot_epi,h=5,w=14)
 
 ### Expulsion time ### 
 
-explanatory = c( "sex","Position_normal","height10","birthweight100","head_ConjExt")
-dependent = "Duree_2me_periode_z"
+explanatory = c( "sex","position_normal","height10","birthweight100","head_ConjExt")
+dependent = "explusion_z"
 
-Mod_laus_or <- glm(Duree_2me_periode_z  ~  sex  + Position_normal+ height10+birthweight100+   head_ConjExt,
+Mod_laus_or <- glm(explusion_z  ~  sex  + position_normal+ height10+birthweight100+   head_ConjExt,
                    data = data_laus)
 
-Mod_basel_or <- glm(Duree_2me_periode_z  ~   sex + Position_normal + height10+birthweight100+   head_ConjExt,
+Mod_basel_or <- glm(explusion_z  ~   sex + position_normal + height10+birthweight100+   head_ConjExt,
                     data = data_basel)
 
 plot_du <- data_com %>%

@@ -1,4 +1,4 @@
-data_com <- read.xlsx("data/data_com.xlsx",detectDates = TRUE) 
+data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE) 
 
 density_plot_age <- ggplot() +
   geom_density(data = data_com, aes(x=age_mother, col=City), lwd=1.5) +
