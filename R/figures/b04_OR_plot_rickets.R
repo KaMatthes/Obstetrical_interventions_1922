@@ -53,7 +53,8 @@ data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
          Maternal.body  = factor( Maternal.body , levels = c("normal","thin","obese")),
          rickets = recode(rickets,
                                "1" = "yes",
-                               "0" = "no")) %>%
+                               "0" = "no")
+    ) %>%
   group_by(city) %>%
   mutate(expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)) %>%
   ungroup()
@@ -81,7 +82,7 @@ plot_epi <- data_com %>%
              dependent_label="SEP and Rickets - Episiotomy")
 
 # cowplot::save_plot("output/plot_body_uni_epi.pdf", plot_epi,base_height=4,base_width=14)
-ggsave("output/Episiotomy/OR_epi_sr.png",  plot_epi,h=5,w=14)
+ggsave("output/Episiotomy/OR_epi_sr.png",  dpi = 900, plot_epi,h=5,w=14)
 
 
 ### Forceps/CS ###
@@ -101,7 +102,7 @@ plot_forc <- data_com %>%
             title_text_size = 15,
             dependent_label="Rickets - Forceps/CS")
 
-ggsave("output/ForcepsCS/OR_forc_sr.png",  plot_forc,h=5,w=14)
+ggsave("output/ForcepsCS/OR_forc_sr.png",  dpi = 900,plot_forc,h=5,w=14)
 
 
 ### Expulsion time ### 
@@ -121,4 +122,4 @@ plot_du <- data_com %>%
             title_text_size = 15,
             dependent_label="Rickets  - Expulsion phase in z-values")
 
-ggsave("output/Duration/OR_dur_sr.png",  plot_forc,h=5,w=14)
+ggsave("output/Duration/OR_dur_sr.png",  dpi = 900,plot_forc,h=5,w=14)

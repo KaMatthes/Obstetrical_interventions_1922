@@ -49,9 +49,12 @@ data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
          Maternal.body=case_when(obesity==1 ~ "obese",
                                  thin==1 ~ "thin",
                                  obesity==0 &  thin==0 ~ "normal"),
-         Maternal.body  = factor( Maternal.body , levels = c("normal","thin","obese"))) %>%
+         Maternal.body  = factor( Maternal.body , levels = c("normal","thin","obese"))
+    ) %>%
   group_by(city) %>%
-  mutate(expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)) %>%
+  mutate(
+    expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)
+    ) %>%
   ungroup()
 
 data_laus <- data_com %>%
@@ -80,7 +83,7 @@ plot_epi <- data_com %>%
             dependent_label="SEP and Maternal body - Episiotomy")
 
 # cowplot::save_plot("output/plot_body_uni_epi.pdf", plot_epi,base_height=4,base_width=14)
-ggsave("output/Episiotomy/OR_epi_sb.png",  plot_epi,h=5,w=14)
+ggsave("output/Episiotomy/OR_epi_sb.png", dpi = 900, plot_epi,h=5,w=14)
 
 
 ### Forceps/CS ###
@@ -102,7 +105,7 @@ plot_forc <- data_com %>%
             dependent_label="SEP and Maternal body - Forceps/CS")
 # 
 # cowplot::save_plot("output/plot_body_uni_mec.pdf", plot_mec,base_height=7,base_width=14)
-ggsave("output/ForcepsCS/OR_forc_sb.png",  plot_forc,h=5,w=14)
+ggsave("output/ForcepsCS/OR_forc_sb.png",  dpi = 900,plot_forc,h=5,w=14)
 
 
 ### Expulsion time ### 
@@ -124,5 +127,5 @@ plot_du <- data_com %>%
             dependent_label="SEP and Maternal body - Expulsion phase in z-values")
 
 # cowplot::save_plot("output/plot_body_uni_du.pdf", plot_du,base_height=7,base_width=14)
-ggsave("output/Duration/OR_dur_sb.png", plot_du,h=5,w=14)
+ggsave("output/Duration/OR_dur_sb.png", dpi = 900, plot_du,h=5,w=14)
 

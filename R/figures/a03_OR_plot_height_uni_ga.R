@@ -32,9 +32,12 @@ data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
           head_ConjExt  = factor( head_ConjExt , levels = c("normal","large-small","small-large")),
          dura_terc = cut(expulsion, breaks=c(quantile(expulsion, c(0:3/3), na.rm = TRUE)),
                          labels=c("1st tercile","2nd tercile","3rd tercile"), include.lowest=TRUE),
-         sex = factor( sex, levels = c("male", "female"))) %>%
+         sex = factor( sex, levels = c("male", "female"))
+    ) %>%
   group_by(city) %>%
-  mutate(expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)) %>%
+  mutate(
+    expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)
+    ) %>%
   ungroup() 
 
 
@@ -60,7 +63,7 @@ plot_epi <- data_com %>%
             title_text_size = 15,
             dependent_label="Only gestational age - Episiotomy")
 
-ggsave("output/Episiotomy/OR_epi_ga.png",  plot_epi,h=5,w=14)
+ggsave("output/Episiotomy/OR_epi_ga.png",  dpi = 900,plot_epi,h=5,w=14)
 
 
 ### Forceps/CS ###
@@ -75,7 +78,7 @@ plot_forc <- data_com %>%
             title_text_size = 15,
             dependent_label="Only gestational age - Forceps/CS")
 
-ggsave("output/ForcepsCS/OR_forc_ga.png",  plot_forc,h=5,w=14)
+ggsave("output/ForcepsCS/OR_forc_ga.png",dpi = 900,  plot_forc,h=5,w=14)
 
 
 ### Expulsion time ### 
@@ -91,4 +94,4 @@ plot_du <- data_com %>%
             title_text_size = 15,
             dependent_label="Only gestational age - Expulsion phase in z-values")
 
-ggsave("output/Duration/OR_dur_ga.png", plot_du,h=5,w=14)
+ggsave("output/Duration/OR_dur_ga.png", dpi = 900, plot_du,h=5,w=14)

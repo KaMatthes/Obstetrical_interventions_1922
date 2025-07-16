@@ -1,7 +1,7 @@
 data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE) 
 
 density_plot_age <- ggplot() +
-  geom_density(data = data_com, aes(x=age_mother, col=City), lwd=1.5) +
+  geom_density(data = data_com, aes(x=age_mother, col=city), lwd=1.5) +
   scale_color_manual(" ",
                      breaks=c("Lausanne","Basel"),
                      values = c(mypalette[3],mypalette[2]))+
@@ -17,7 +17,7 @@ density_plot_age <- ggplot() +
 
 
 density_plot_height <- ggplot() +
-  geom_density(data = data_com, aes(x=height, col=City), lwd=1.5) +
+  geom_density(data = data_com, aes(x=height, col=city), lwd=1.5) +
   scale_color_manual(" ",
                      breaks=c("Lausanne","Basel"),
                      values = c(mypalette[3],mypalette[2]))+
@@ -34,7 +34,7 @@ density_plot_height <- ggplot() +
 
 
 density_plot_head <- ggplot() +
-  geom_density(data = data_com, aes(x=head_circ, col=City), lwd=1.5) +
+  geom_density(data = data_com, aes(x=head_circ, col=city), lwd=1.5) +
   scale_color_manual(" ",
                      breaks=c("Lausanne","Basel"),
                      values = c(mypalette[3],mypalette[2]))+
@@ -50,7 +50,7 @@ density_plot_head <- ggplot() +
 
 
 density_plot_ConjExt <- ggplot() +
-  geom_density(data = data_com, aes(x=Bassin_ConjExt, col=City), lwd=1.5) +
+  geom_density(data = data_com, aes(x=bassin_conjExt, col=city), lwd=1.5) +
   scale_color_manual(" ",
                      breaks=c("Lausanne","Basel"),
                      values = c(mypalette[3],mypalette[2]))+
@@ -66,7 +66,7 @@ density_plot_ConjExt <- ggplot() +
 
 
 density_plot_Cretes <- ggplot() +
-  geom_density(data = data_com, aes(x=Bassin_Cretes, col=City), lwd=1.5) +
+  geom_density(data = data_com, aes(x=bassin_cretes, col=city), lwd=1.5) +
   scale_color_manual(" ",
                      breaks=c("Lausanne","Basel"),
                      values = c(mypalette[3],mypalette[2]))+
@@ -82,7 +82,7 @@ density_plot_Cretes <- ggplot() +
 
 
 density_plot_birthweight <- ggplot() +
-  geom_density(data = data_com, aes(x=birthweight, col=City), lwd=1.5) +
+  geom_density(data = data_com, aes(x=birthweight, col=city), lwd=1.5) +
   scale_color_manual(" ",
                      breaks=c("Lausanne","Basel"),
                      values = c(mypalette[3],mypalette[2]))+
@@ -98,7 +98,7 @@ density_plot_birthweight <- ggplot() +
 
 
 density_plot_GA <- ggplot() +
-  geom_density(data = data_com, aes(x=GA_weeks, col=City), lwd=1.5) +
+  geom_density(data = data_com, aes(x=GA_weeks, col=city), lwd=1.5) +
   scale_color_manual(" ",
                      breaks=c("Lausanne","Basel"),
                      values = c(mypalette[3],mypalette[2]))+
@@ -119,5 +119,7 @@ Supplement_density <- cowplot::plot_grid(density_plot_age,density_plot_height,
                                  density_plot_GA,
                                   ncol=2,nrow=4, align="hv")
 
-cowplot::save_plot("output/Supplement_density.pdf", Supplement_density,base_height=30,base_width=15,limitsize = FALSE)
+# cowplot::save_plot("output/Supplement_density.pdf", Supplement_density,base_height=30,base_width=15,limitsize = FALSE)
+
+ggsave("output/Supplement_density.png",  dpi = 900,Supplement_density,h=30,w=16)
 

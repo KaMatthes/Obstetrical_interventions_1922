@@ -30,7 +30,8 @@ data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
     head_ConjExt  = factor( head_ConjExt , levels = c("normal","large-small","small-large")),
     dura_terc = cut(expulsion, breaks=c(quantile(expulsion, c(0:3/3), na.rm = TRUE)),
                     labels=c("1st tercile","2nd tercile","3rd tercile"), include.lowest=TRUE),
-    sex = factor( sex, levels = c("male", "female"))) %>%
+    sex = factor( sex, levels = c("male", "female"))
+    ) %>%
   group_by(city) %>%
   mutate(expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)) %>%
   ungroup()

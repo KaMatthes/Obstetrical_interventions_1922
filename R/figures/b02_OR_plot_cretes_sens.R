@@ -34,7 +34,8 @@ data_com <- read.xlsx("data/data_birth.xlsx",detectDates = TRUE)  %>%
     head_ConjExt  = factor( head_ConjExt , levels = c("normal","large-small","small-large")),
     dura_terc = cut(expulsion, breaks=c(quantile(expulsion, c(0:3/3), na.rm = TRUE)),
                     labels=c("1st tercile","2nd tercile","3rd tercile"), include.lowest=TRUE),
-    sex = factor( sex, levels = c("male", "female"))) %>%
+    sex = factor( sex, levels = c("male", "female"))
+    ) %>%
   group_by(city) %>%
   mutate(expulsion_z = (expulsion-mean(expulsion,na.rm = TRUE))/sd(expulsion,na.rm = TRUE)) %>%
   ungroup()
@@ -62,7 +63,7 @@ plot_epi <- data_com %>%
             dependent_label="Bassin Cretes - Episiotomy")
 
 # cowplot::save_plot("output/plot_height_epi_nga_p.pdf", plot_epi,base_height=5,base_width=14)
-ggsave("output/Episiotomy/OR_epi_c.png",  plot_epi,h=5,w=14)
+ggsave("output/Episiotomy/OR_epi_c.png",   dpi = 900,plot_epi,h=5,w=14)
 
 
 ### Expulsion time ### 
@@ -85,4 +86,4 @@ plot_du <- data_com %>%
 
 # cowplot::save_plot("output/plot_cretes_du.pdf", plot_du,base_height=5,base_width=14)
 
-ggsave("output/Duration/OR_dur_c.png", plot_du,h=5,w=14)
+ggsave("output/Duration/OR_dur_c.png", dpi = 900, plot_du,h=5,w=14)
