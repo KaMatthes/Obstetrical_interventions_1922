@@ -112,7 +112,7 @@ write.xlsx(table_data_basel_me ,paste0("output/ForcepsCS/results_b_forc.xlsx"), 
 explanatory = c( "sex","parity","position_normal","height10","birthweight100","head_ConjExt")
 dependent = "expulsion_z"
 
-Mod_laus_or <- glm(expulsion  ~  sex + parity + position_normal+ height10+birthweight100+   head_ConjExt,
+Mod_laus_or <- glm(expulsion_z  ~  sex + parity + position_normal+ height10+birthweight100+   head_ConjExt,
                    data = data_laus)
 
 Mod_basel_or <- glm(expulsion_z  ~   sex + parity + position_normal + height10+birthweight100+   head_ConjExt,
@@ -125,6 +125,7 @@ plot_du <- data_com %>%
 
 # cowplot::save_plot("output/Duration/plot_height_du_nga_p.pdf", plot_du,base_height=5,base_width=14)
 ggsave("output/Duration/OR_dur_h.png",dpi = 900,plot_du,h=5,w=14)
+
 
 table_data_laus_du <- data_laus %>%
   finalfit(dependent, explanatory,glmfit = Mod_laus_me)
